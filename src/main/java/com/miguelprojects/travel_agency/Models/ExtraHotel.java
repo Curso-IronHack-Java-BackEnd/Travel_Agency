@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name ="hotel_extras")
 @DynamicUpdate
@@ -18,7 +20,7 @@ public class ExtraHotel {
 
     private String description;
 
-    private Double extraPrice;
+    private BigDecimal extraPrice;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")

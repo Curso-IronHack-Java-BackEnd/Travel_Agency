@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -38,7 +39,7 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @NotNull(message = "Price is mandatory")
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "date_of_reservation")
     private LocalDateTime dateOfReservation;

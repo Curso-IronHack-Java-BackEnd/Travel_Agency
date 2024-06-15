@@ -1,7 +1,6 @@
 package com.miguelprojects.travel_agency.Models;
 
 import com.miguelprojects.travel_agency.Enums.TicketClass;
-import com.sun.jdi.ClassType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -42,10 +42,10 @@ public class Hotel {
     @Min(value = 0, message = "Rating must be greater than 0")
     @Max(value = 5, message = "Rating must be a maximum of 5")
     @Digits(integer = 1, fraction = 1, message = "Wrong Rating Format")
-    private Double rating;
+    private BigDecimal rating;
 
     @Column(name = "breakfast_include")
-    private boolean breakfastInclude;
+    private Boolean breakfastInclude;
 
     @Column(name = "hotel_type")
     @NotBlank(message = "Hotel Type is mandatory")

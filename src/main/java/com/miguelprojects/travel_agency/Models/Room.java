@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -22,12 +23,11 @@ public class Room {
     @Column(name = "room_type")
     private RoomType roomType;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "price_per_night")
     @NotNull(message = "Price per night is mandatory")
-    private Double pricePerNight;
+    private BigDecimal pricePerNight;
 
-    private Integer capacity;
+    //private Integer capacity;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Room Status is mandatory")

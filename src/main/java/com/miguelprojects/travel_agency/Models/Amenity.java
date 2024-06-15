@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name ="amenities")
 @DynamicUpdate
@@ -18,7 +20,7 @@ public class Amenity {
 
     private String description;
 
-    private Double extraPrice;
+    private BigDecimal extraPrice;
 
     @NotBlank(message = "Target Audience is mandatory")
     private Integer targetAudience;

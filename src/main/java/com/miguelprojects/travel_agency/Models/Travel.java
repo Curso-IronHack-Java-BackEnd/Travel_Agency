@@ -3,6 +3,7 @@ package com.miguelprojects.travel_agency.Models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Travel {
     private String duration;
 
     @Column(name = "final_price")
-    private Double finalPrice;
+    private BigDecimal finalPrice;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
