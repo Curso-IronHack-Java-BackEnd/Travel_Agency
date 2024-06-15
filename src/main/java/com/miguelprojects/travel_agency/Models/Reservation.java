@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name ="reservations")
@@ -55,7 +56,128 @@ public class Reservation {
     @OneToOne(mappedBy="reservation")
     private Travel travel;
 
+    public Reservation() {    }
 
+    public Reservation(String reservationCode, Promotions promotions, Integer adults, Integer children,
+                       PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal price,
+                       LocalDateTime dateOfReservation, Agent agent, Customer customer, Travel travel) {
+        this.reservationCode = reservationCode;
+        this.promotions = promotions;
+        this.adults = adults;
+        this.children = children;
+        this.paymentMethod = paymentMethod;
+        this.reservationStatus = reservationStatus;
+        this.price = price;
+        this.dateOfReservation = dateOfReservation;
+        this.agent = agent;
+        this.customer = customer;
+        this.travel = travel;
+    }
 
+    public String getReservationCode() {
+        return reservationCode;
+    }
 
+    public void setReservationCode(String reservationCode) {
+        this.reservationCode = reservationCode;
+    }
+
+    public Promotions getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(Promotions promotions) {
+        this.promotions = promotions;
+    }
+
+    public Integer getAdults() {
+        return adults;
+    }
+
+    public void setAdults(Integer adults) {
+        this.adults = adults;
+    }
+
+    public Integer getChildren() {
+        return children;
+    }
+
+    public void setChildren(Integer children) {
+        this.children = children;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public ReservationStatus getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public LocalDateTime getDateOfReservation() {
+        return dateOfReservation;
+    }
+
+    public void setDateOfReservation(LocalDateTime dateOfReservation) {
+        this.dateOfReservation = dateOfReservation;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Travel getTravel() {
+        return travel;
+    }
+
+    public void setTravel(Travel travel) {
+        this.travel = travel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(reservationCode, that.reservationCode) && promotions == that.promotions
+                && Objects.equals(adults, that.adults) && Objects.equals(children, that.children)
+                && paymentMethod == that.paymentMethod && reservationStatus == that.reservationStatus
+                && Objects.equals(price, that.price) && Objects.equals(dateOfReservation, that.dateOfReservation)
+                && Objects.equals(agent, that.agent) && Objects.equals(customer, that.customer)
+                && Objects.equals(travel, that.travel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reservationCode, promotions, adults, children, paymentMethod,
+                reservationStatus, price, dateOfReservation, agent, customer, travel);
+    }
 }

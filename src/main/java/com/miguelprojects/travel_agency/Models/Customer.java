@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="customers")
@@ -19,22 +20,6 @@ public class Customer extends User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private Long customerId;
-
-//    @Column(name = "first_name")
-//    @NotBlank(message = "First Name is mandatory")
-//    private String firstName;
-//
-//    @Column(name = "last_name")
-//    private String lastName;
-//
-//    @Column(name = "phone_number")
-//    @NotBlank(message = "Phone number is mandatory")
-//    @Size(min = 9, max = 15)
-//    private String phoneNumber;
-//
-//    @NotBlank(message = "Email is mandatory")
-//    @Email(message = "Email should be valid")
-//    private String email;
 
     @NotBlank(message = "First Name is mandatory")
     private String address;
@@ -50,4 +35,67 @@ public class Customer extends User{
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Travel> travels = new ArrayList<>();
 
+
+    public Customer() {    }
+
+    public Customer(String firstName, String lastName, String phoneNumber, String email, Long customerId,
+                    String address, LocalDate dateOfBirth, List<Reservation> reservations, List<Travel> travels) {
+        super(firstName, lastName, phoneNumber, email);
+        this.customerId = customerId;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.reservations = reservations;
+        this.travels = travels;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public List<Travel> getTravels() {
+        return travels;
+    }
+
+    public void setTravels(List<Travel> travels) {
+        this.travels = travels;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(customerId, customer.customerId) && Objects.equals(address, customer.address)
+                && Objects.equals(dateOfBirth, customer.dateOfBirth)
+                && Objects.equals(reservations, customer.reservations) && Objects.equals(travels, customer.travels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerId, address, dateOfBirth, reservations, travels);
+    }
 }

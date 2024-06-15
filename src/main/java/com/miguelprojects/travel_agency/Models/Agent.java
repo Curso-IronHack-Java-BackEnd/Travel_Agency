@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name ="agents")
@@ -17,22 +18,6 @@ public class Agent extends User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "agent_id")
     private Long agentId;
-
-//    @Column(name = "first_name")
-//    @NotBlank(message = "First Name is mandatory")
-//    private String firstName;
-//
-//    @Column(name = "last_name")
-//    private String lastName;
-//
-//    @NotBlank(message = "Email is mandatory")
-//    @Email(message = "Email should be valid")
-//    private String email;
-//
-//    @Column(name = "phone_number")
-//    @NotBlank(message = "Phone number is mandatory")
-//    @Size(min = 9, max = 15)
-//    private String phoneNumber;
 
     private String specialization;
 
@@ -50,7 +35,8 @@ public class Agent extends User{
 
     public Agent() {    }
 
-    public Agent(String firstName, String lastName, String phoneNumber, String email, Long agentId, String specialization, BigDecimal commissionRate, List<Reservation> reservations) {
+    public Agent(String firstName, String lastName, String phoneNumber, String email, Long agentId,
+                 String specialization, BigDecimal commissionRate, List<Reservation> reservations) {
         super(firstName, lastName, phoneNumber, email);
         this.agentId = agentId;
         this.specialization = specialization;
@@ -58,12 +44,11 @@ public class Agent extends User{
         this.reservations = reservations;
     }
 
+
+    //Getters and Setters
+
     public Long getAgentId() {
         return agentId;
-    }
-
-    public void setAgentId(Long agentId) {
-        this.agentId = agentId;
     }
 
     public String getSpecialization() {
@@ -90,7 +75,23 @@ public class Agent extends User{
         this.reservations = reservations;
     }
 
-    //Getters and Setters
+    // Equals and HashCode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Agent agent = (Agent) o;
+        return Objects.equals(agentId, agent.agentId) && Objects.equals(specialization, agent.specialization)
+                && Objects.equals(commissionRate, agent.commissionRate) && Objects.equals(reservations, agent.reservations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(agentId, specialization, commissionRate, reservations);
+    }
+
+    // Other Methods
 
 
 

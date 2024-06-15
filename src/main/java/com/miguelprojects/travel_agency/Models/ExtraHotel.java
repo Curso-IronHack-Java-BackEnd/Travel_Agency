@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name ="hotel_extras")
@@ -25,4 +26,65 @@ public class ExtraHotel {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+
+    public ExtraHotel() {    }
+
+    public ExtraHotel(Integer extraId, String name, String description, BigDecimal extraPrice, Hotel hotel) {
+        this.extraId = extraId;
+        this.name = name;
+        this.description = description;
+        this.extraPrice = extraPrice;
+        this.hotel = hotel;
+    }
+
+    public Integer getExtraId() {
+        return extraId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getExtraPrice() {
+        return extraPrice;
+    }
+
+    public void setExtraPrice(BigDecimal extraPrice) {
+        this.extraPrice = extraPrice;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtraHotel that = (ExtraHotel) o;
+        return Objects.equals(extraId, that.extraId) && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(extraPrice, that.extraPrice) && Objects.equals(hotel, that.hotel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(extraId, name, description, extraPrice, hotel);
+    }
 }
