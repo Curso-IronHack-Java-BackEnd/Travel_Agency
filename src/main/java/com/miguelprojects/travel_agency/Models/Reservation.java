@@ -6,6 +6,7 @@ import com.miguelprojects.travel_agency.Enums.ReservationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
@@ -39,10 +40,11 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    @NotNull(message = "Price is mandatory")
-    private BigDecimal price;
+    @NotNull(message = "Deposit is mandatory")
+    private BigDecimal deposit;
 
     @Column(name = "date_of_reservation")
+    @Past(message = "Reservation must have been made in the past")
     private LocalDateTime dateOfReservation;
 
     @ManyToOne
@@ -59,7 +61,7 @@ public class Reservation {
     public Reservation() {    }
 
     public Reservation(String reservationCode, Promotions promotions, Integer adults, Integer children,
-                       PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal price,
+                       PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal deposit,
                        LocalDateTime dateOfReservation, Agent agent, Customer customer, Travel travel) {
         this.reservationCode = reservationCode;
         this.promotions = promotions;
@@ -67,7 +69,7 @@ public class Reservation {
         this.children = children;
         this.paymentMethod = paymentMethod;
         this.reservationStatus = reservationStatus;
-        this.price = price;
+        this.deposit = deposit;
         this.dateOfReservation = dateOfReservation;
         this.agent = agent;
         this.customer = customer;
@@ -122,12 +124,12 @@ public class Reservation {
         this.reservationStatus = reservationStatus;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getDeposit() {
+        return deposit;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setDeposit(BigDecimal deposit) {
+        this.deposit = deposit;
     }
 
     public LocalDateTime getDateOfReservation() {
@@ -170,7 +172,7 @@ public class Reservation {
         return Objects.equals(reservationCode, that.reservationCode) && promotions == that.promotions
                 && Objects.equals(adults, that.adults) && Objects.equals(children, that.children)
                 && paymentMethod == that.paymentMethod && reservationStatus == that.reservationStatus
-                && Objects.equals(price, that.price) && Objects.equals(dateOfReservation, that.dateOfReservation)
+                && Objects.equals(deposit, that.deposit) && Objects.equals(dateOfReservation, that.dateOfReservation)
                 && Objects.equals(agent, that.agent) && Objects.equals(customer, that.customer)
                 && Objects.equals(travel, that.travel);
     }
@@ -178,6 +180,6 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(reservationCode, promotions, adults, children, paymentMethod,
-                reservationStatus, price, dateOfReservation, agent, customer, travel);
+                reservationStatus, deposit, dateOfReservation, agent, customer, travel);
     }
 }

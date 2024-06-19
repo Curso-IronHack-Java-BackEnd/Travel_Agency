@@ -45,9 +45,6 @@ public class Hotel {
     @Digits(integer = 1, fraction = 1, message = "Wrong Rating Format")
     private BigDecimal rating;
 
-    @Column(name = "breakfast_include")
-    private Boolean breakfastInclude;
-
     @Column(name = "hotel_type")
     @NotBlank(message = "Hotel Type is mandatory")
     @Enumerated(EnumType.STRING)
@@ -72,10 +69,9 @@ public class Hotel {
 
     public Hotel() {    }
 
-    public Hotel(Long hotelId, String name, String address, String city, String country, String phoneNumber,
-                 String email, BigDecimal rating, Boolean breakfastInclude, HotelType hotelType, Integer numberOfRooms,
+    public Hotel(String name, String address, String city, String country, String phoneNumber,
+                 String email, BigDecimal rating, HotelType hotelType, Integer numberOfRooms,
                  List<Room> rooms, List<ExtraHotel> extras, List<Amenity> amenities, Travel travel) {
-        this.hotelId = hotelId;
         this.name = name;
         this.address = address;
         this.city = city;
@@ -83,7 +79,6 @@ public class Hotel {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.rating = rating;
-        this.breakfastInclude = breakfastInclude;
         this.hotelType = hotelType;
         this.numberOfRooms = numberOfRooms;
         this.rooms = rooms;
@@ -152,14 +147,6 @@ public class Hotel {
         this.rating = rating;
     }
 
-    public Boolean getBreakfastInclude() {
-        return breakfastInclude;
-    }
-
-    public void setBreakfastInclude(Boolean breakfastInclude) {
-        this.breakfastInclude = breakfastInclude;
-    }
-
     public HotelType getHotelType() {
         return hotelType;
     }
@@ -217,15 +204,14 @@ public class Hotel {
                 && Objects.equals(address, hotel.address) && Objects.equals(city, hotel.city)
                 && Objects.equals(country, hotel.country) && Objects.equals(phoneNumber, hotel.phoneNumber)
                 && Objects.equals(email, hotel.email) && Objects.equals(rating, hotel.rating)
-                && Objects.equals(breakfastInclude, hotel.breakfastInclude) && hotelType == hotel.hotelType
-                && Objects.equals(numberOfRooms, hotel.numberOfRooms) && Objects.equals(rooms, hotel.rooms)
-                && Objects.equals(extras, hotel.extras) && Objects.equals(amenities, hotel.amenities)
-                && Objects.equals(travel, hotel.travel);
+                && hotelType == hotel.hotelType && Objects.equals(numberOfRooms, hotel.numberOfRooms)
+                && Objects.equals(rooms, hotel.rooms) && Objects.equals(extras, hotel.extras)
+                && Objects.equals(amenities, hotel.amenities) && Objects.equals(travel, hotel.travel);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(hotelId, name, address, city, country, phoneNumber, email, rating,
-                breakfastInclude, hotelType, numberOfRooms, rooms, extras, amenities, travel);
+                hotelType, numberOfRooms, rooms, extras, amenities, travel);
     }
 }

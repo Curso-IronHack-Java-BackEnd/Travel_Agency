@@ -29,8 +29,7 @@ public class ExtraRoom {
 
     public ExtraRoom() {    }
 
-    public ExtraRoom(Integer extraId, String name, String description, BigDecimal extraPrice, Room room) {
-        this.extraId = extraId;
+    public ExtraRoom(String name, String description, BigDecimal extraPrice, Room room) {
         this.name = name;
         this.description = description;
         this.extraPrice = extraPrice;

@@ -1,6 +1,7 @@
 package com.miguelprojects.travel_agency.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
@@ -19,8 +20,10 @@ public class Travel {
 
     private String destination;
 
+    @NotNull(message = "Duration is mandatory")
     private String duration;
 
+    @NotNull(message = "Final price is mandatory")
     @Column(name = "final_price")
     private BigDecimal finalPrice;
 
@@ -40,9 +43,8 @@ public class Travel {
 
     public Travel() {    }
 
-    public Travel(Long travelId, String destination, String duration, BigDecimal finalPrice,
+    public Travel(String destination, String duration, BigDecimal finalPrice,
                   Customer customer, Reservation reservation, List<Hotel> hotels, List<Flight> flights) {
-        this.travelId = travelId;
         this.destination = destination;
         this.duration = duration;
         this.finalPrice = finalPrice;

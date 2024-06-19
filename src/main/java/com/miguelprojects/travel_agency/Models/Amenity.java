@@ -21,23 +21,15 @@ public class Amenity {
 
     private String description;
 
-    private BigDecimal extraPrice;
-
-    @NotBlank(message = "Target Audience is mandatory")
-    private Integer targetAudience;
-
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
     public Amenity() {    }
 
-    public Amenity(Long amenityId, String name, String description, BigDecimal extraPrice, Integer targetAudience, Hotel hotel) {
-        this.amenityId = amenityId;
+    public Amenity(String name, String description, Hotel hotel) {
         this.name = name;
         this.description = description;
-        this.extraPrice = extraPrice;
-        this.targetAudience = targetAudience;
         this.hotel = hotel;
     }
 
@@ -61,22 +53,6 @@ public class Amenity {
         this.description = description;
     }
 
-    public BigDecimal getExtraPrice() {
-        return extraPrice;
-    }
-
-    public void setExtraPrice(BigDecimal extraPrice) {
-        this.extraPrice = extraPrice;
-    }
-
-    public Integer getTargetAudience() {
-        return targetAudience;
-    }
-
-    public void setTargetAudience(Integer targetAudience) {
-        this.targetAudience = targetAudience;
-    }
-
     public Hotel getHotel() {
         return hotel;
     }
@@ -91,12 +67,11 @@ public class Amenity {
         if (o == null || getClass() != o.getClass()) return false;
         Amenity amenity = (Amenity) o;
         return Objects.equals(amenityId, amenity.amenityId) && Objects.equals(name, amenity.name)
-                && Objects.equals(description, amenity.description) && Objects.equals(extraPrice, amenity.extraPrice)
-                && Objects.equals(targetAudience, amenity.targetAudience) && Objects.equals(hotel, amenity.hotel);
+                && Objects.equals(description, amenity.description) && Objects.equals(hotel, amenity.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amenityId, name, description, extraPrice, targetAudience, hotel);
+        return Objects.hash(amenityId, name, description, hotel);
     }
 }

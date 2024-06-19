@@ -28,11 +28,14 @@ public class Room {
     @NotNull(message = "Price per night is mandatory")
     private BigDecimal pricePerNight;
 
+    @NotNull(message = "Number of nights is mandatory")
+    private Integer nights;
+
     //private Integer capacity;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Room Status is mandatory")
-    private RoomStatus status;
+//    @Enumerated(EnumType.STRING)
+//    @NotNull(message = "Room Status is mandatory")
+//    private RoomStatus status;
 
 
     @Column(name = "room_extras")
@@ -46,11 +49,11 @@ public class Room {
     public Room() {    }
 
     public Room(String roomNumber, RoomType roomType, BigDecimal pricePerNight,
-                RoomStatus status, List<ExtraRoom> extras, Hotel hotel) {
+                Integer nights, List<ExtraRoom> extras, Hotel hotel) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.pricePerNight = pricePerNight;
-        this.status = status;
+        this.nights = nights;
         this.extras = extras;
         this.hotel = hotel;
     }
@@ -79,12 +82,12 @@ public class Room {
         this.pricePerNight = pricePerNight;
     }
 
-    public RoomStatus getStatus() {
-        return status;
+    public Integer getNights() {
+        return nights;
     }
 
-    public void setStatus(RoomStatus status) {
-        this.status = status;
+    public void setNights(Integer nights) {
+        this.nights = nights;
     }
 
     public List<ExtraRoom> getExtras() {
@@ -109,12 +112,12 @@ public class Room {
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
         return Objects.equals(roomNumber, room.roomNumber) && roomType == room.roomType
-                && Objects.equals(pricePerNight, room.pricePerNight) && status == room.status
+                && Objects.equals(pricePerNight, room.pricePerNight) && Objects.equals(nights, room.nights)
                 && Objects.equals(extras, room.extras) && Objects.equals(hotel, room.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber, roomType, pricePerNight, status, extras, hotel);
+        return Objects.hash(roomNumber, roomType, pricePerNight, nights, extras, hotel);
     }
 }

@@ -29,8 +29,7 @@ public class ExtraHotel {
 
     public ExtraHotel() {    }
 
-    public ExtraHotel(Integer extraId, String name, String description, BigDecimal extraPrice, Hotel hotel) {
-        this.extraId = extraId;
+    public ExtraHotel(String name, String description, BigDecimal extraPrice, Hotel hotel) {
         this.name = name;
         this.description = description;
         this.extraPrice = extraPrice;

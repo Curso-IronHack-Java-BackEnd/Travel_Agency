@@ -30,15 +30,18 @@ public class Agent extends User{
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
 
     // Constructores
 
     public Agent() {    }
 
-    public Agent(String firstName, String lastName, String phoneNumber, String email, Long agentId,
+    public Agent(String firstName, String lastName, String phoneNumber, String email,
                  String specialization, BigDecimal commissionRate, List<Reservation> reservations) {
         super(firstName, lastName, phoneNumber, email);
-        this.agentId = agentId;
         this.specialization = specialization;
         this.commissionRate = commissionRate;
         this.reservations = reservations;

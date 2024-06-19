@@ -38,10 +38,9 @@ public class Customer extends User{
 
     public Customer() {    }
 
-    public Customer(String firstName, String lastName, String phoneNumber, String email, Long customerId,
+    public Customer(String firstName, String lastName, String phoneNumber, String email,
                     String address, LocalDate dateOfBirth, List<Reservation> reservations, List<Travel> travels) {
         super(firstName, lastName, phoneNumber, email);
-        this.customerId = customerId;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.reservations = reservations;

@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,6 +27,9 @@ public class Flight {
 
     private String airline;
 
+    @NotBlank(message = "Aircraft is mandatory")
+    private String aircraft;
+
     @NotBlank(message = "Origin is mandatory")
     private String origin;
 
@@ -35,15 +40,21 @@ public class Flight {
 
     private Integer duration;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "date_of_flight")
     @NotNull(message = "Date of Flight is mandatory")
     private LocalDate dateOfFlight;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
+
+    @NotBlank(message = "Price is mandatory")
+    private BigDecimal price;
 
     @NotBlank(message = "Seat Number is mandatory")
     @Column(name = "seat_number")
@@ -60,12 +71,12 @@ public class Flight {
 
     public Flight() {    }
 
-    public Flight(Long flightId, String flightNumber, String airline, String origin, String destination,
+    public Flight(String flightNumber, String airline, String aircraft, String origin, String destination,
                   Integer mileage, Integer duration, LocalDate dateOfFlight, LocalDateTime departureTime,
-                  LocalDateTime arrivalTime, String seatNumber, TicketClass ticketClass, Travel travel) {
-        this.flightId = flightId;
+                  LocalDateTime arrivalTime, BigDecimal price, String seatNumber, TicketClass ticketClass, Travel travel) {
         this.flightNumber = flightNumber;
         this.airline = airline;
+        this.aircraft = aircraft;
         this.origin = origin;
         this.destination = destination;
         this.mileage = mileage;
@@ -73,6 +84,7 @@ public class Flight {
         this.dateOfFlight = dateOfFlight;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.price = price;
         this.seatNumber = seatNumber;
         this.ticketClass = ticketClass;
         this.travel = travel;
@@ -96,6 +108,14 @@ public class Flight {
 
     public void setAirline(String airline) {
         this.airline = airline;
+    }
+
+    public String getAircraft() {
+        return aircraft;
+    }
+
+    public void setAircraft(String aircraft) {
+        this.aircraft = aircraft;
     }
 
     public String getOrigin() {
@@ -154,6 +174,14 @@ public class Flight {
         this.arrivalTime = arrivalTime;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public String getSeatNumber() {
         return seatNumber;
     }
@@ -184,17 +212,18 @@ public class Flight {
         if (o == null || getClass() != o.getClass()) return false;
         Flight flight = (Flight) o;
         return Objects.equals(flightId, flight.flightId) && Objects.equals(flightNumber, flight.flightNumber)
-                && Objects.equals(airline, flight.airline) && Objects.equals(origin, flight.origin)
-                && Objects.equals(destination, flight.destination) && Objects.equals(mileage, flight.mileage)
-                && Objects.equals(duration, flight.duration) && Objects.equals(dateOfFlight, flight.dateOfFlight)
-                && Objects.equals(departureTime, flight.departureTime) && Objects.equals(arrivalTime, flight.arrivalTime)
+                && Objects.equals(airline, flight.airline) && Objects.equals(aircraft, flight.aircraft) &&
+                Objects.equals(origin, flight.origin) && Objects.equals(destination, flight.destination)
+                && Objects.equals(mileage, flight.mileage) && Objects.equals(duration, flight.duration)
+                && Objects.equals(dateOfFlight, flight.dateOfFlight) && Objects.equals(departureTime, flight.departureTime)
+                && Objects.equals(arrivalTime, flight.arrivalTime) && Objects.equals(price, flight.price)
                 && Objects.equals(seatNumber, flight.seatNumber) && ticketClass == flight.ticketClass
                 && Objects.equals(travel, flight.travel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flightId, flightNumber, airline, origin, destination, mileage, duration,
-                dateOfFlight, departureTime, arrivalTime, seatNumber, ticketClass, travel);
+        return Objects.hash(flightId, flightNumber, airline, aircraft, origin, destination, mileage, duration,
+                dateOfFlight, departureTime, arrivalTime, price, seatNumber, ticketClass, travel);
     }
 }
