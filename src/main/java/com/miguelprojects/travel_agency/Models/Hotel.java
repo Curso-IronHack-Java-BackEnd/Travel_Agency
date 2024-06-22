@@ -1,5 +1,6 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miguelprojects.travel_agency.Enums.HotelType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -42,7 +43,7 @@ public class Hotel {
 
     @Min(value = 0, message = "Rating must be greater than 0")
     @Max(value = 5, message = "Rating must be a maximum of 5")
-    @Digits(integer = 1, fraction = 1, message = "Wrong Rating Format")
+    @Digits(integer = 2, fraction = 1, message = "Wrong Rating Format")
     private BigDecimal rating;
 
     @Column(name = "hotel_type")
@@ -53,25 +54,26 @@ public class Hotel {
     @Column(name = "number_of_rooms")
     private Integer numberOfRooms;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Room> rooms = new ArrayList<>();
+    @Column(name = "price_children")
+    @Digits(integer = 6, fraction = 2, message = "Wrong Price Format")
+    @NotBlank(message = "Price per Children is mandatory")
+    private BigDecimal priceChildren;
 
-    @Column(name = "hotel_extras")
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExtraHotel> extras = new ArrayList<>();
+    @Column(name = "price_adult")
+    @Digits(integer = 6, fraction = 2, message = "Wrong Price Format")
+    @NotBlank(message = "Price per Adult is mandatory")
+    private BigDecimal priceAdult;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Amenity> amenities = new ArrayList<>();
+    @JsonIgnore
+    @OneToOne(mappedBy="hotel")
+    private HotelBooking hotelBooking;
 
-    @ManyToOne
-    @JoinColumn(name = "travel_id")
-    private Travel travel;
 
     public Hotel() {    }
 
     public Hotel(String name, String address, String city, String country, String phoneNumber,
                  String email, BigDecimal rating, HotelType hotelType, Integer numberOfRooms,
-                 List<Room> rooms, List<ExtraHotel> extras, List<Amenity> amenities, Travel travel) {
+                 BigDecimal priceChildren, BigDecimal priceAdult, HotelBooking hotelBooking) {
         this.name = name;
         this.address = address;
         this.city = city;
@@ -81,10 +83,9 @@ public class Hotel {
         this.rating = rating;
         this.hotelType = hotelType;
         this.numberOfRooms = numberOfRooms;
-        this.rooms = rooms;
-        this.extras = extras;
-        this.amenities = amenities;
-        this.travel = travel;
+        this.priceChildren = priceChildren;
+        this.priceAdult = priceAdult;
+        this.hotelBooking = hotelBooking;
     }
 
     public Long getHotelId() {
@@ -163,36 +164,28 @@ public class Hotel {
         this.numberOfRooms = numberOfRooms;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
+    public BigDecimal getPriceChildren() {
+        return priceChildren;
     }
 
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public void setPriceChildren(BigDecimal priceChildren) {
+        this.priceChildren = priceChildren;
     }
 
-    public List<ExtraHotel> getExtras() {
-        return extras;
+    public BigDecimal getPriceAdult() {
+        return priceAdult;
     }
 
-    public void setExtras(List<ExtraHotel> extras) {
-        this.extras = extras;
+    public void setPriceAdult(BigDecimal priceAdult) {
+        this.priceAdult = priceAdult;
     }
 
-    public List<Amenity> getAmenities() {
-        return amenities;
+    public HotelBooking getHotelBooking() {
+        return hotelBooking;
     }
 
-    public void setAmenities(List<Amenity> amenities) {
-        this.amenities = amenities;
-    }
-
-    public Travel getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Travel travel) {
-        this.travel = travel;
+    public void setHotelBooking(HotelBooking hotelBooking) {
+        this.hotelBooking = hotelBooking;
     }
 
     @Override
@@ -205,13 +198,13 @@ public class Hotel {
                 && Objects.equals(country, hotel.country) && Objects.equals(phoneNumber, hotel.phoneNumber)
                 && Objects.equals(email, hotel.email) && Objects.equals(rating, hotel.rating)
                 && hotelType == hotel.hotelType && Objects.equals(numberOfRooms, hotel.numberOfRooms)
-                && Objects.equals(rooms, hotel.rooms) && Objects.equals(extras, hotel.extras)
-                && Objects.equals(amenities, hotel.amenities) && Objects.equals(travel, hotel.travel);
+                && Objects.equals(priceChildren, hotel.priceChildren) && Objects.equals(priceAdult, hotel.priceAdult)
+                && Objects.equals(hotelBooking, hotel.hotelBooking);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(hotelId, name, address, city, country, phoneNumber, email, rating,
-                hotelType, numberOfRooms, rooms, extras, amenities, travel);
+                hotelType, numberOfRooms, priceChildren, priceAdult, hotelBooking);
     }
 }

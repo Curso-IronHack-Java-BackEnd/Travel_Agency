@@ -1,5 +1,6 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
@@ -35,23 +36,25 @@ public class Travel {
     @JoinColumn(name="reservation_id")
     private Reservation reservation;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Hotel> hotels = new ArrayList<>();
+    private List<HotelBooking> hotelBookings = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Flight> flights = new ArrayList<>();
+    private List<FlightBooking> flightBookings = new ArrayList<>();
 
     public Travel() {    }
 
     public Travel(String destination, String duration, BigDecimal finalPrice,
-                  Customer customer, Reservation reservation, List<Hotel> hotels, List<Flight> flights) {
+                  Customer customer, Reservation reservation, List<HotelBooking> hotelBookings, List<FlightBooking> flightBookings) {
         this.destination = destination;
         this.duration = duration;
         this.finalPrice = finalPrice;
         this.customer = customer;
         this.reservation = reservation;
-        this.hotels = hotels;
-        this.flights = flights;
+        this.hotelBookings = hotelBookings;
+        this.flightBookings = flightBookings;
     }
 
     public Long getTravelId() {
@@ -98,20 +101,20 @@ public class Travel {
         this.reservation = reservation;
     }
 
-    public List<Hotel> getHotels() {
-        return hotels;
+    public List<HotelBooking> getHotelBookings() {
+        return hotelBookings;
     }
 
-    public void setHotels(List<Hotel> hotels) {
-        this.hotels = hotels;
+    public void setHotelBookings(List<HotelBooking> hotelBookings) {
+        this.hotelBookings = hotelBookings;
     }
 
-    public List<Flight> getFlights() {
-        return flights;
+    public List<FlightBooking> getFlightBookings() {
+        return flightBookings;
     }
 
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
+    public void setFlightBookings(List<FlightBooking> flightBookings) {
+        this.flightBookings = flightBookings;
     }
 
     @Override
@@ -122,11 +125,11 @@ public class Travel {
         return Objects.equals(travelId, travel.travelId) && Objects.equals(destination, travel.destination)
                 && Objects.equals(duration, travel.duration) && Objects.equals(finalPrice, travel.finalPrice)
                 && Objects.equals(customer, travel.customer) && Objects.equals(reservation, travel.reservation)
-                && Objects.equals(hotels, travel.hotels) && Objects.equals(flights, travel.flights);
+                && Objects.equals(hotelBookings, travel.hotelBookings) && Objects.equals(flightBookings, travel.flightBookings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(travelId, destination, duration, finalPrice, customer, reservation, hotels, flights);
+        return Objects.hash(travelId, destination, duration, finalPrice, customer, reservation, hotelBookings, flightBookings);
     }
 }

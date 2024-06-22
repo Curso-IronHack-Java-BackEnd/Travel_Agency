@@ -1,7 +1,9 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miguelprojects.travel_agency.Enums.TicketClass;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
@@ -21,13 +23,13 @@ public class Flight {
     @Column(name = "flight_id")
     private Long flightId;
 
-    @NotBlank(message = "First Name is mandatory")
+    @NotBlank(message = "Flight Number is mandatory")
     @Column(name = "flight_number")
     private String flightNumber;
 
+    @NotBlank(message = "Airline is mandatory")
     private String airline;
 
-    @NotBlank(message = "Aircraft is mandatory")
     private String aircraft;
 
     @NotBlank(message = "Origin is mandatory")
@@ -43,6 +45,7 @@ public class Flight {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "date_of_flight")
     @NotNull(message = "Date of Flight is mandatory")
+    @Future(message = "Date of Flight must be in the future")
     private LocalDate dateOfFlight;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
@@ -65,15 +68,15 @@ public class Flight {
     @Column(name = "ticket_class")
     private TicketClass ticketClass;
 
-    @ManyToOne
-    @JoinColumn(name = "travel_id")
-    private Travel travel;
+    @JsonIgnore
+    @OneToOne(mappedBy="flight")
+    private FlightBooking flightBooking;
 
     public Flight() {    }
 
     public Flight(String flightNumber, String airline, String aircraft, String origin, String destination,
                   Integer mileage, Integer duration, LocalDate dateOfFlight, LocalDateTime departureTime,
-                  LocalDateTime arrivalTime, BigDecimal price, String seatNumber, TicketClass ticketClass, Travel travel) {
+                  LocalDateTime arrivalTime, BigDecimal price, String seatNumber, TicketClass ticketClass) {
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.aircraft = aircraft;
@@ -85,9 +88,9 @@ public class Flight {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.price = price;
+
         this.seatNumber = seatNumber;
         this.ticketClass = ticketClass;
-        this.travel = travel;
     }
 
     public Long getFlightId() {
@@ -198,14 +201,6 @@ public class Flight {
         this.ticketClass = ticketClass;
     }
 
-    public Travel getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Travel travel) {
-        this.travel = travel;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -217,13 +212,12 @@ public class Flight {
                 && Objects.equals(mileage, flight.mileage) && Objects.equals(duration, flight.duration)
                 && Objects.equals(dateOfFlight, flight.dateOfFlight) && Objects.equals(departureTime, flight.departureTime)
                 && Objects.equals(arrivalTime, flight.arrivalTime) && Objects.equals(price, flight.price)
-                && Objects.equals(seatNumber, flight.seatNumber) && ticketClass == flight.ticketClass
-                && Objects.equals(travel, flight.travel);
+                && Objects.equals(seatNumber, flight.seatNumber) && ticketClass == flight.ticketClass;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(flightId, flightNumber, airline, aircraft, origin, destination, mileage, duration,
-                dateOfFlight, departureTime, arrivalTime, price, seatNumber, ticketClass, travel);
+                dateOfFlight, departureTime, arrivalTime, price, seatNumber, ticketClass);
     }
 }

@@ -1,6 +1,7 @@
 package com.miguelprojects.travel_agency.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -21,7 +22,7 @@ public class Customer extends User{
     @Column(name = "customer_id")
     private Long customerId;
 
-    @NotBlank(message = "First Name is mandatory")
+    @NotBlank(message = "Address is mandatory")
     private String address;
 
     @Column(name = "date_of_birth")
@@ -29,9 +30,11 @@ public class Customer extends User{
     @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Travel> travels = new ArrayList<>();
 

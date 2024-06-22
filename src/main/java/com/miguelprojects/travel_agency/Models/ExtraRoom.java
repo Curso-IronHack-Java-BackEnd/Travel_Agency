@@ -1,10 +1,12 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,17 +25,20 @@ public class ExtraRoom {
 
     private BigDecimal extraPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "extras_at_room",
+            joinColumns = @JoinColumn(name = "room_extra_id", referencedColumnName = "extra_id"),
+            inverseJoinColumns = @JoinColumn(name = "hotel_booking_id", referencedColumnName = "hotel_booking_id"))
+    private List<HotelBooking> hotelBookings;
 
     public ExtraRoom() {    }
 
-    public ExtraRoom(String name, String description, BigDecimal extraPrice, Room room) {
+    public ExtraRoom(String name, String description, BigDecimal extraPrice, List<HotelBooking> hotelBookings) {
         this.name = name;
         this.description = description;
         this.extraPrice = extraPrice;
-        this.room = room;
+        this.hotelBookings = hotelBookings;
     }
 
     public Integer getExtraId() {
@@ -64,12 +69,12 @@ public class ExtraRoom {
         this.extraPrice = extraPrice;
     }
 
-    public Room getRoom() {
-        return room;
+    public List<HotelBooking> getHotelBookings() {
+        return hotelBookings;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setHotelBooking(List<HotelBooking> hotelBookings) {
+        this.hotelBookings = hotelBookings;
     }
 
     @Override
@@ -79,11 +84,11 @@ public class ExtraRoom {
         ExtraRoom extraRoom = (ExtraRoom) o;
         return Objects.equals(extraId, extraRoom.extraId) && Objects.equals(name, extraRoom.name)
                 && Objects.equals(description, extraRoom.description)
-                && Objects.equals(extraPrice, extraRoom.extraPrice) && Objects.equals(room, extraRoom.room);
+                && Objects.equals(extraPrice, extraRoom.extraPrice) && Objects.equals(hotelBookings, extraRoom.hotelBookings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(extraId, name, description, extraPrice, room);
+        return Objects.hash(extraId, name, description, extraPrice, hotelBookings);
     }
 }

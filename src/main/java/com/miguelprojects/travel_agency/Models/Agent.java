@@ -1,6 +1,7 @@
 package com.miguelprojects.travel_agency.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,9 +25,10 @@ public class Agent extends User{
     @Column(name = "commission_rate")
     @Min(value =1, message = "The commision rate must be at least 1%")
     @Max(value =15, message = "The commision rate must be a maximum of 15%")
-    @Digits(integer = 2, fraction = 2, message = "Wrong Rating Format")
+    @Digits(integer = 4, fraction = 2, message = "Wrong Rating Format")
     private BigDecimal commissionRate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -39,12 +41,13 @@ public class Agent extends User{
 
     public Agent() {    }
 
-    public Agent(String firstName, String lastName, String phoneNumber, String email,
-                 String specialization, BigDecimal commissionRate, List<Reservation> reservations) {
+    public Agent(String firstName, String lastName, String phoneNumber, String email, String specialization,
+                 BigDecimal commissionRate, List<Reservation> reservations, Manager manager) {
         super(firstName, lastName, phoneNumber, email);
         this.specialization = specialization;
         this.commissionRate = commissionRate;
         this.reservations = reservations;
+        this.manager = manager;
     }
 
 
@@ -78,6 +81,14 @@ public class Agent extends User{
         this.reservations = reservations;
     }
 
+    public Manager getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
+
     // Equals and HashCode
 
     @Override
@@ -86,25 +97,13 @@ public class Agent extends User{
         if (o == null || getClass() != o.getClass()) return false;
         Agent agent = (Agent) o;
         return Objects.equals(agentId, agent.agentId) && Objects.equals(specialization, agent.specialization)
-                && Objects.equals(commissionRate, agent.commissionRate) && Objects.equals(reservations, agent.reservations);
+                && Objects.equals(commissionRate, agent.commissionRate) && Objects.equals(reservations, agent.reservations)
+                && Objects.equals(manager, agent.manager);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(agentId, specialization, commissionRate, reservations);
+        return Objects.hash(agentId, specialization, commissionRate, reservations, manager);
     }
 
-    // Other Methods
-
-
-
-//    public void addReservation(Reservation reservation) {
-//        reservations.add(reservation);
-//        reservation.setCustomer(this);
-//    }
-//
-//    public void removeReservation(Reservation reservation) {
-//        reservations.remove(reservation);
-//        reservation.setCustomer(null);
-//    }
 }

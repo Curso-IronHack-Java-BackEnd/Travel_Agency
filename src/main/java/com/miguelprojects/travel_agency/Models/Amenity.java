@@ -1,10 +1,12 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,26 +16,29 @@ public class Amenity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "amenity_id")
-    private Long amenityId;
+    private Integer amenityId;
 
     @NotBlank(message = "Name is mandatory")
     private String name;
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "amenities_at_hotel",
+            joinColumns = @JoinColumn(name = "amenity_id", referencedColumnName = "amenity_id"),
+            inverseJoinColumns = @JoinColumn(name = "hotel_booking_id", referencedColumnName = "hotel_booking_id"))
+    private List<HotelBooking> hotelBookings;
 
     public Amenity() {    }
 
-    public Amenity(String name, String description, Hotel hotel) {
+    public Amenity(String name, String description, List<HotelBooking> hotelBookings) {
         this.name = name;
         this.description = description;
-        this.hotel = hotel;
+        this.hotelBookings = hotelBookings;
     }
 
-    public Long getAmenityId() {
+    public Integer getAmenityId() {
         return amenityId;
     }
 
@@ -53,12 +58,12 @@ public class Amenity {
         this.description = description;
     }
 
-    public Hotel getHotel() {
-        return hotel;
+    public List<HotelBooking> getHotelBookings() {
+        return hotelBookings;
     }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
+    public void setHotelBookings(List<HotelBooking> hotelBookings) {
+        this.hotelBookings = hotelBookings;
     }
 
     @Override
@@ -67,11 +72,11 @@ public class Amenity {
         if (o == null || getClass() != o.getClass()) return false;
         Amenity amenity = (Amenity) o;
         return Objects.equals(amenityId, amenity.amenityId) && Objects.equals(name, amenity.name)
-                && Objects.equals(description, amenity.description) && Objects.equals(hotel, amenity.hotel);
+                && Objects.equals(description, amenity.description) && Objects.equals(hotelBookings, amenity.hotelBookings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amenityId, name, description, hotel);
+        return Objects.hash(amenityId, name, description, hotelBookings);
     }
 }

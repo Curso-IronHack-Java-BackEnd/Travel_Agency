@@ -1,5 +1,6 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miguelprojects.travel_agency.Enums.PaymentMethod;
 import com.miguelprojects.travel_agency.Enums.Promotions;
 import com.miguelprojects.travel_agency.Enums.ReservationStatus;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,14 +24,14 @@ public class Reservation {
     @Column(name = "reservation_code")
     private String reservationCode;
 
-    @NotNull(message = "Promotions are mandatory")
-    @Enumerated(EnumType.STRING)
-    private Promotions promotions;
-
     @NotBlank(message = "Number of adults is mandatory")
     private Integer adults;
 
     private Integer children;
+
+    @NotNull(message = "Promotions are mandatory")
+    @Enumerated(EnumType.STRING)
+    private Promotions promotions;
 
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
@@ -55,24 +58,36 @@ public class Reservation {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HotelBooking> hotelBookings = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FlightBooking> flightBookings = new ArrayList<>();
+
+    @JsonIgnore
     @OneToOne(mappedBy="reservation")
     private Travel travel;
 
     public Reservation() {    }
 
-    public Reservation(String reservationCode, Promotions promotions, Integer adults, Integer children,
+    public Reservation(String reservationCode, Integer adults, Integer children, Promotions promotions,
                        PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal deposit,
-                       LocalDateTime dateOfReservation, Agent agent, Customer customer, Travel travel) {
+                       LocalDateTime dateOfReservation, Agent agent, Customer customer, List<HotelBooking> hotelBookings,
+                       List<FlightBooking> flightBookings, Travel travel) {
         this.reservationCode = reservationCode;
-        this.promotions = promotions;
         this.adults = adults;
         this.children = children;
+        this.promotions = promotions;
         this.paymentMethod = paymentMethod;
         this.reservationStatus = reservationStatus;
         this.deposit = deposit;
         this.dateOfReservation = dateOfReservation;
         this.agent = agent;
         this.customer = customer;
+        this.hotelBookings = hotelBookings;
+        this.flightBookings = flightBookings;
         this.travel = travel;
     }
 
@@ -82,14 +97,6 @@ public class Reservation {
 
     public void setReservationCode(String reservationCode) {
         this.reservationCode = reservationCode;
-    }
-
-    public Promotions getPromotions() {
-        return promotions;
-    }
-
-    public void setPromotions(Promotions promotions) {
-        this.promotions = promotions;
     }
 
     public Integer getAdults() {
@@ -106,6 +113,14 @@ public class Reservation {
 
     public void setChildren(Integer children) {
         this.children = children;
+    }
+
+    public Promotions getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(Promotions promotions) {
+        this.promotions = promotions;
     }
 
     public PaymentMethod getPaymentMethod() {
@@ -156,6 +171,22 @@ public class Reservation {
         this.customer = customer;
     }
 
+    public List<HotelBooking> getHotelBookings() {
+        return hotelBookings;
+    }
+
+    public void setHotelBookings(List<HotelBooking> hotelBookings) {
+        this.hotelBookings = hotelBookings;
+    }
+
+    public List<FlightBooking> getFlightBookings() {
+        return flightBookings;
+    }
+
+    public void setFlightBookings(List<FlightBooking> flightBookings) {
+        this.flightBookings = flightBookings;
+    }
+
     public Travel getTravel() {
         return travel;
     }
@@ -169,17 +200,20 @@ public class Reservation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(reservationCode, that.reservationCode) && promotions == that.promotions
+        return Objects.equals(reservationCode, that.reservationCode)
                 && Objects.equals(adults, that.adults) && Objects.equals(children, that.children)
-                && paymentMethod == that.paymentMethod && reservationStatus == that.reservationStatus
-                && Objects.equals(deposit, that.deposit) && Objects.equals(dateOfReservation, that.dateOfReservation)
+                && promotions == that.promotions && paymentMethod == that.paymentMethod
+                && reservationStatus == that.reservationStatus && Objects.equals(deposit, that.deposit)
+                && Objects.equals(dateOfReservation, that.dateOfReservation)
                 && Objects.equals(agent, that.agent) && Objects.equals(customer, that.customer)
+                && Objects.equals(hotelBookings, that.hotelBookings) && Objects.equals(flightBookings, that.flightBookings)
                 && Objects.equals(travel, that.travel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reservationCode, promotions, adults, children, paymentMethod,
-                reservationStatus, deposit, dateOfReservation, agent, customer, travel);
+        return Objects.hash(reservationCode, adults, children, promotions, paymentMethod,
+                reservationStatus, deposit, dateOfReservation, agent, customer,
+                hotelBookings, flightBookings, travel);
     }
 }
