@@ -2,6 +2,7 @@ package com.miguelprojects.travel_agency.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -23,6 +24,7 @@ public class Manager extends User{
     private String department;
 
     @Column(name = "years_of_experience")
+    @Min(value = 2, message = "Minimun experience is 2 years")
     private Integer yearsOfExperience;
 
     @JsonIgnore

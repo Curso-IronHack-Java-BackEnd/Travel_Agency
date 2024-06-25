@@ -5,6 +5,7 @@ import com.miguelprojects.travel_agency.Enums.PaymentMethod;
 import com.miguelprojects.travel_agency.Enums.Promotions;
 import com.miguelprojects.travel_agency.Enums.ReservationStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -44,6 +45,7 @@ public class Reservation {
     private ReservationStatus reservationStatus;
 
     @NotNull(message = "Deposit is mandatory")
+    @Min(value = 0, message = "Deposit must be positive or 0")
     private BigDecimal deposit;
 
     @Column(name = "date_of_reservation")

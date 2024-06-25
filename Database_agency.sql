@@ -49,7 +49,7 @@ create table hotels
     phone_number      varchar(15)               not null,
     email             varchar(255)              not null,
     rating            decimal(2, 1)             null,
-    hotel_type        enum ('AIRPORT', 'APARTMENT', 'BEACH', 'FAMILY', 'INN', 'LOW_COST', 'MONUMENT', 'MOTEL', 'NATURE', 'SPA', 'TOURIST', 'URBAN') not null,
+    hotel_type        enum('AIRPORT', 'APARTMENT', 'BEACH', 'FAMILY', 'INN', 'LOW_COST', 'MONUMENT', 'MOTEL', 'NATURE', 'SPA', 'TOURIST', 'URBAN', 'LUXURY') not null,
     number_of_rooms   int                       null,
     price_children    decimal(6,2)              not null,
     price_adult       decimal(6,2)              not null,
@@ -118,11 +118,11 @@ create table hotel_bookings
     hotel_id                bigint                  null,
     reservation_code        varchar(255)            null,
     travel_id               bigint                  null,
-    constraint hotelToHotelBooking
+     constraint hotelToHotelBooking
         foreign key (hotel_id) references hotels (hotel_id),
-    constraint reservationToHotelBooking
+     constraint reservationToHotelBooking
         foreign key (reservation_code) references reservations (reservation_code),
-    constraint travelToHotelBooking
+     constraint travelToHotelBooking
         foreign key (travel_id) references travels (travel_id),
     check (`duration` >= 1)
 );
@@ -135,18 +135,18 @@ create table flight_bookings
     reservation_code        varchar(255)            null,
     travel_id               bigint                  null,
     flight_id               bigint                  null,
-    constraint reservationToFlightBooking
+     constraint reservationToFlightBooking
         foreign key (reservation_code) references reservations (reservation_code),
-    constraint travelToFlightBooking
+     constraint travelToFlightBooking
         foreign key (travel_id) references travels (travel_id),
-    constraint flightToFlightBooking
+     constraint flightToFlightBooking
         foreign key (flight_id) references flights (flight_id)
 );
 
 
 create table amenities
 (
-    amenity_id          bigint auto_increment
+    amenity_id          int auto_increment
         primary key,
     name                varchar(255)   not null,
     description         varchar(255)   null,
@@ -157,12 +157,14 @@ create table amenities
 
 create table amenities_at_hotel
 (
+    amenities_at_hotel_id    int auto_increment
+        primary key,
     hotel_booking_id         bigint               null,
     amenity_id               int                  null,
 
-    constraint hotelBookingToAmenity
+      constraint hotelBookingToAmenity
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id),
-    constraint amenityToHotelBooking
+      constraint amenityToHotelBooking
         foreign key (amenity_id) references amenities (amenity_id)
 );
 
@@ -181,12 +183,14 @@ create table hotel_extras
 
 create table extras_at_hotel
 (
+    extra_at_hotel_id    int auto_increment
+        primary key,
     hotel_booking_id       bigint               null,
     extra_id               int                  null,
 
-    constraint hotelBookingToExtraHotel
+     constraint hotelBookingToExtraHotel
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id),
-    constraint extraHotelToHotelBooking
+     constraint extraHotelToHotelBooking
         foreign key (extra_id) references hotel_extras (extra_id)
 );
 
@@ -197,19 +201,21 @@ create table room_extras
     name        varchar(255)   not null,
     description varchar(255)   null,
     extra_price decimal(10, 2) null,
-    hotel_booking_id     varchar(255)   null,
-    constraint FKi726ud8np1b41ti7j2v8p86hk
+    hotel_booking_id     bigint   null,
+      constraint FKi726ud8np1b41ti7j2v8p86hk
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id)
 );
 
 create table extras_at_room
 (
+    extra_at_room_id    int auto_increment
+        primary key,
     hotel_booking_id       bigint               null,
     extra_id               int                  null,
 
-    constraint hotelBookingToExtraRoom
+     constraint hotelBookingToExtraRoom
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id),
-    constraint extraRoomToHotelBooking
+     constraint extraRoomToHotelBooking
         foreign key (extra_id) references room_extras (extra_id)
 );
 
@@ -241,14 +247,14 @@ INSERT INTO agents (first_name, last_name, phone_number, email, specialization, 
 
 
 INSERT INTO hotels (name, address, city, country, phone_number, email, rating, hotel_type, number_of_rooms, price_children, price_adult) VALUES
-    ('Toledo Imperial', 'Avenida Recoletos 25', 'Toledo', 'España', '+34923495967', 'toledoimperial@gmail.es', 3.5, 'URBAN', 100, 20, 30),
-    ('Indiana', 'C/ Europa, 12', 'Buenos Aires', 'Argentina', '+541146498000', 'indianabuenosaires@gmail.ar', 2.9, 'AIRPORT', 320, 15, 35),
-    ('Heckfield Palace', 'Heckfield Place, 1', 'Hampshire', 'Reino Unido', '+441189326868', 'heckfielPalace@gmail.uk', 4.1, 'MONUMENT', 150, 75, 110),
-    ('Regina Isabella', 'Piazza Santa Restituta, 1', 'Ischia', 'Italia', '+39081994322', 'reginaisabella@gmail.it', 4.5, 'TOURIST', 200, 40, 80),
-    ('Hotel Imperial', 'Kärntner Ring 16', 'Viena', 'Austria', '+431501100', 'hotelimperial@gmail.at',4.0, 'NATURE', 160, 65, 90),
-    ('Palacio Principe Real', 'R. de São Marçal 77', 'Lisboa', 'Portugal', '+351218792000', 'palacioprincipereal@gmail.pt',4.2, 'SPA', 180, 50, 75),
-    ('Jumeirah Burj Al Arab', 'Jumeirah Beach Road', 'Dubai', 'Emiratos Árabes Unidos', '+97143665000', 'website-feedback@jumeirah.com',4.8, 'LUXURY', 300, 950, 1199),
-    ('Park Central Hotel', '870 7Th Avenue', 'New York', 'Estados Unidos', '+12122478000', 'reservations@parkcentralny.com',3.9, 'URBAN', 430, 315, 420);
+    ('Toledo Imperial', 'Avenida Recoletos 25', 'Toledo', 'España', '+34923495967', 'toledoimperial@gmail.es', 3.5, 'URBAN', 100, 20.00, 30.00),
+    ('Indiana', 'C/ Europa, 12', 'Buenos Aires', 'Argentina', '+541146498000', 'indianabuenosaires@gmail.ar', 2.9, 'AIRPORT', 320, 15.00, 35.00),
+    ('Heckfield Palace', 'Heckfield Place, 1', 'Hampshire', 'Reino Unido', '+441189326868', 'heckfielPalace@gmail.uk', 4.1, 'MONUMENT', 150, 75.00, 110.00),
+    ('Regina Isabella', 'Piazza Santa Restituta, 1', 'Ischia', 'Italia', '+39081994322', 'reginaisabella@gmail.it', 4.5, 'TOURIST', 200, 40.00, 80.00),
+    ('Hotel Imperial', 'Karntner Ring 16', 'Viena', 'Austria', '+431501100', 'hotelimperial@gmail.at', 4.0, 'NATURE', 160, 65.00, 90.00),
+    ('Palacio Principe Real', 'R. de São Marçal 77', 'Lisboa', 'Portugal', '+351218792000', 'palacioprincipereal@gmail.pt',4.2, 'SPA', 180, 50.00, 75.00),
+    ('Jumeirah Burj Al Arab', 'Jumeirah Beach Road', 'Dubai', 'Emiratos Árabes Unidos', '+97143665000', 'website-feedback@jumeirah.com',4.8, 'LUXURY', 300, 950.00, 1199.00),
+    ('Park Central Hotel', '870 7Th Avenue', 'New York', 'Estados Unidos', '+12122478000', 'reservations@parkcentralny.com',3.9, 'URBAN', 430, 315.00, 420.00);
 
 
 
@@ -390,7 +396,7 @@ INSERT INTO room_extras (name, description, extra_price) VALUES
     ('Spa', 'Massages, facials, and other beauty and wellness treatments', 60),
     ('Recreational Activities', 'Yoga, hiking trails, bike tours, aquatic sports, etc', 30);
 
-INSERT INTO extras_at_hotel (hotel_booking_id, extra_id) VALUES
+INSERT INTO extras_at_room (hotel_booking_id, extra_id) VALUES
     (1,2),  (1,3),  (1,6),  (1,8),
     (3,1),  (3,6),  (3,8),  (2,13), (2,16),
     (4,1),  (4,4),  (4,6),  (4,16),

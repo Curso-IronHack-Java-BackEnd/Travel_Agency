@@ -19,6 +19,7 @@ public class Travel {
     @Column(name = "travel_id")
     private Long travelId;
 
+    @NotNull(message = "Destination is mandatory")
     private String destination;
 
     @NotNull(message = "Duration is mandatory")

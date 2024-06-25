@@ -1,5 +1,6 @@
 package com.miguelprojects.travel_agency.Controller;
 
+import com.miguelprojects.travel_agency.Models.Agent;
 import com.miguelprojects.travel_agency.Models.Customer;
 import com.miguelprojects.travel_agency.Models.Reservation;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
@@ -36,26 +37,35 @@ public class AgentController {
     private AgentService agentService;
 
 
-    //Obtener todos los customers (getAllCustomers)
+    //Obtener todos los agents (getAllAgents)
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Customer> getAllCustomers() {
-        return agentService.getAllCustomer();
+    public List<Agent> getAllAgent() {
+        return agentService.getAllAgent();
     }
 
-    //Obtener un customer concreto (getCustomerById)
+    //Obtener un agent concreto (getAgentById)
     @GetMapping("{/id}")
     @ResponseStatus(HttpStatus.OK)
-    public Customer getCustomerById(@PathVariable(name="id") Long customerId) {
-        return agentService.getCustomerById(customerId);
+    public Agent getAgentById(@PathVariable(name="id") Long agentId) {
+        return agentService.getAgentById(agentId);
     }
 
-    //Eliminar customer (deleteCustomerById)
+    //Eliminar agent (deleteAgentById)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCustomer(@PathVariable(name = "id") Long customerId){
-        agentService.deleteCustomerById(customerId);
+    public void deleteAgent(@PathVariable(name = "id") Long agentId){
+        agentService.deleteAgentById(agentId);
     }
+
+    //Crea un nuevo agent (createAgent
+    // )
+
+
+
+
+
+
 
     //Obtener todas las reservations(getAllReservations)
     @GetMapping("/reservations")
@@ -70,6 +80,16 @@ public class AgentController {
     public Reservation getReservationById(@PathVariable(name="id") String reservationCode){
         return agentService.getReservationById(reservationCode);
     }
+
+    //Obtener una lista de reservations por customerId(getReservationByCustomerId)
+    @GetMapping("/reservations/customer/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Reservation> getReservationsByCustomerId(@PathVariable(name="id") Long customerId){
+        return agentService.getReservationsByCustomerId(customerId);
+    }
+
+
+
 
     //Crear nueva reservation (postReservation)
 

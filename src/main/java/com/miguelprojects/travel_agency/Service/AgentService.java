@@ -1,13 +1,9 @@
 package com.miguelprojects.travel_agency.Service;
 
-import com.miguelprojects.travel_agency.Models.Agent;
-import com.miguelprojects.travel_agency.Models.Customer;
-import com.miguelprojects.travel_agency.Models.Reservation;
-import com.miguelprojects.travel_agency.Models.Travel;
-import com.miguelprojects.travel_agency.Repository.AgentRepository;
-import com.miguelprojects.travel_agency.Repository.CustomerRepository;
-import com.miguelprojects.travel_agency.Repository.ReservationRepository;
-import com.miguelprojects.travel_agency.Repository.TravelRepository;
+import com.miguelprojects.travel_agency.DTOs.AgentCreateDTO;
+import com.miguelprojects.travel_agency.DTOs.AgentUpdateDTO;
+import com.miguelprojects.travel_agency.Models.*;
+import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,24 +22,76 @@ public class AgentService {
     private ReservationRepository reservationRepository;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
 
-    public List<Customer> getAllCustomer() {
-        return customerRepository.findAll();
+
+    public List<Agent> getAllAgent() {
+        return agentRepository.findAll();
     }
 
-    public Customer getCustomerById(Long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow
-        (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id: "+ customerId + " not found"));
+    public Agent getAgentById(Long agentId) {
+        Agent agent = agentRepository.findById(agentId).orElseThrow
+                (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id: "+ agentId + " not found"));
 
-        return customer;
+        return agent;
     }
 
-    public void deleteCustomerById(Long customerId) {
-        Customer customer = customerRepository.findById(customerId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id: "+  customerId + " not found"));
+    public void deleteAgentById(Long agentId) {
+        Agent agent = agentRepository.findById(agentId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id: "+  agentId + " not found"));
 
-        customerRepository.delete(customer);
+        agentRepository.delete(agent);
     }
+
+    public Agent createAgent (AgentCreateDTO agentDTO){
+
+        Manager manager = managerRepository.findById(agentDTO.getManagerId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + agentDTO.getManagerId() +" not found"));
+
+        Agent newAgent = new Agent();
+        newAgent.setFirstName(agentDTO.getFirstName());
+        newAgent.setLastName(agentDTO.getLastName());
+        newAgent.setPhoneNumber(agentDTO.getPhoneNumber());
+        newAgent.setEmail(agentDTO.getEmail());
+        newAgent.setSpecialization(agentDTO.getSpecialization());
+        newAgent.setCommissionRate(agentDTO.getCommissionRate());
+        newAgent.setManager(manager);
+
+        return agentRepository.save(newAgent);
+    }
+
+    public Agent updateAgent (Long agentId, AgentUpdateDTO agentDTO){
+
+        Agent updatedAgent = agentRepository.findById(agentId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + agentId +" not found"));
+
+        if (agentDTO.getFirstName() != null){
+            updatedAgent.setFirstName(agentDTO.getFirstName());
+        }
+        if (agentDTO.getLastName() != null){
+            updatedAgent.setLastName(agentDTO.getLastName());
+        }
+        if (agentDTO.getPhoneNumber() != null){
+            updatedAgent.setPhoneNumber(agentDTO.getPhoneNumber());
+        }
+        if (agentDTO.getEmail() != null){
+            updatedAgent.setEmail(agentDTO.getEmail());
+        }
+        if (agentDTO.getSpecialization() != null){
+            updatedAgent.setSpecialization(agentDTO.getSpecialization());
+        }
+
+        return updatedAgent;
+    }
+
+
+
+
+
+
+
+
 
     public List<Reservation> getAllReservation() {
         return reservationRepository.findAll();

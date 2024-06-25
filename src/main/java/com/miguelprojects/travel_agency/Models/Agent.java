@@ -22,6 +22,7 @@ public class Agent extends User{
 
     private String specialization;
 
+    @NotBlank
     @Column(name = "commission_rate")
     @Min(value =1, message = "The commision rate must be at least 1%")
     @Max(value =15, message = "The commision rate must be a maximum of 15%")
