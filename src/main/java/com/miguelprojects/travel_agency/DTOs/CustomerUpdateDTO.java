@@ -1,13 +1,10 @@
 package com.miguelprojects.travel_agency.DTOs;
 
 import com.miguelprojects.travel_agency.Models.User;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.*;
-
 import java.time.LocalDate;
+
 
 @Getter
 @Setter

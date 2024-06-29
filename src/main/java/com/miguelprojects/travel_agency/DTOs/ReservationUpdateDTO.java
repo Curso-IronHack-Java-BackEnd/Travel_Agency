@@ -3,14 +3,13 @@ package com.miguelprojects.travel_agency.DTOs;
 import com.miguelprojects.travel_agency.Enums.PaymentMethod;
 import com.miguelprojects.travel_agency.Enums.Promotions;
 import com.miguelprojects.travel_agency.Enums.ReservationStatus;
-
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor

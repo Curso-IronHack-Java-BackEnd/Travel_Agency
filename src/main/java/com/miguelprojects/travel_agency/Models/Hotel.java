@@ -5,11 +5,9 @@ import com.miguelprojects.travel_agency.Enums.HotelType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="hotels")

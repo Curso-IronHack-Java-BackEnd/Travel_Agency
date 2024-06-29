@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="amenities")

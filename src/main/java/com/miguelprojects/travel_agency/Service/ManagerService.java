@@ -1,19 +1,15 @@
 package com.miguelprojects.travel_agency.Service;
 
-import com.miguelprojects.travel_agency.DTOs.AgentCreateDTO;
-import com.miguelprojects.travel_agency.DTOs.AgentUpdateDTO;
 import com.miguelprojects.travel_agency.DTOs.ManagerCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.ManagerUpdateDTO;
-import com.miguelprojects.travel_agency.Models.Agent;
-import com.miguelprojects.travel_agency.Models.Customer;
 import com.miguelprojects.travel_agency.Models.Manager;
 import com.miguelprojects.travel_agency.Repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
+
 
 @Service
 public class ManagerService {
@@ -21,10 +17,13 @@ public class ManagerService {
     @Autowired
     private ManagerRepository managerRepository;
 
+
+    // Obtener todos los Managers (getAll)
     public List<Manager> getAllManager() {
         return managerRepository.findAll();
     }
 
+    // Obtener un Manager concreto (getById)
     public Manager getManagerById(Long managerId) {
         Manager manager = managerRepository.findById(managerId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manager with id: "+ managerId + " not found"));
@@ -32,6 +31,7 @@ public class ManagerService {
         return manager;
     }
 
+    // Eliminar un Manager concreto (deleteById)
     public void deleteManagerById(Long managerId) {
         Manager manager = managerRepository.findById(managerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manager with id: "+  managerId + " not found"));
@@ -39,6 +39,7 @@ public class ManagerService {
         managerRepository.delete(manager);
     }
 
+    // Crear nuevo Manager (create/post)
     public Manager createManager (ManagerCreateDTO managerDTO){
 
         Manager newManager = new Manager();
@@ -52,6 +53,7 @@ public class ManagerService {
         return managerRepository.save(newManager);
     }
 
+    // Modificar un Manager concreto (update/ById)
     public Manager updateManager (Long managerId, ManagerUpdateDTO managerDTO){
 
         Manager updatedManager = managerRepository.findById(managerId).orElseThrow(() ->

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.math.BigDecimal;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="flight_bookings")

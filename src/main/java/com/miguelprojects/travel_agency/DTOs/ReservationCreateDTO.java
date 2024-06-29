@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -46,8 +45,10 @@ public class ReservationCreateDTO {
     @Past(message = "Reservation must have been made in the past")
     private LocalDateTime dateOfReservation;
 
+    @NotBlank
     private Long agentId;
 
+    @NotBlank
     private Long customerId;
 
 }

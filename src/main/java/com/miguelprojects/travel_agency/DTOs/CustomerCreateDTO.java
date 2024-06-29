@@ -1,18 +1,12 @@
 package com.miguelprojects.travel_agency.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.miguelprojects.travel_agency.Models.Reservation;
-import com.miguelprojects.travel_agency.Models.Travel;
 import com.miguelprojects.travel_agency.Models.User;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.*;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
 @Setter

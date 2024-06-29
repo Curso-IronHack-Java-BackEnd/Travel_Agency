@@ -4,6 +4,7 @@ import com.miguelprojects.travel_agency.Models.User;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

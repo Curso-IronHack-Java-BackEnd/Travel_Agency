@@ -5,4 +5,10 @@
     <data-source id="a2773d9c-566b-4df7-947c-d62a0f88a9fc" namespace="schema/&quot;travel_agency_db&quot;" />
     <method v="2" />
   </configuration>
+  <configuration default="false" name="Database_agency.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+    <script-file value="$PROJECT_DIR$/Database_agency.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="a2773d9c-566b-4df7-947c-d62a0f88a9fc" namespace="schema/&quot;travel_agency_db&quot;" />
+    <method v="2" />
+  </configuration>
 </component>

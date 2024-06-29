@@ -1,16 +1,10 @@
 package com.miguelprojects.travel_agency.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.miguelprojects.travel_agency.Models.Manager;
-import com.miguelprojects.travel_agency.Models.Reservation;
 import com.miguelprojects.travel_agency.Models.User;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
 @Setter

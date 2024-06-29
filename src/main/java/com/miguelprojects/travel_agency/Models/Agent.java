@@ -1,15 +1,14 @@
 package com.miguelprojects.travel_agency.Models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="agents")

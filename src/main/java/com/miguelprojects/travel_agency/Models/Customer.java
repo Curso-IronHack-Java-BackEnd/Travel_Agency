@@ -1,16 +1,14 @@
 package com.miguelprojects.travel_agency.Models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name="customers")

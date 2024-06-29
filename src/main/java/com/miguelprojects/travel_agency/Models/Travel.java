@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="travels")
@@ -34,7 +34,7 @@ public class Travel {
     private Customer customer;
 
     @OneToOne
-    @JoinColumn(name="reservation_id")
+    @JoinColumn(name="reservation_code")
     private Reservation reservation;
 
     @JsonIgnore

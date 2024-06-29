@@ -1,15 +1,14 @@
 package com.miguelprojects.travel_agency.Models;
 
-import com.miguelprojects.travel_agency.Enums.RoomStatus;
 import com.miguelprojects.travel_agency.Enums.RoomType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name ="rooms")
@@ -38,13 +37,13 @@ public class Room {
 //    private RoomStatus status;
 
 
-    @Column(name = "room_extras")
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExtraRoom> extras;
-
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+//    @Column(name = "room_extras")
+//    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ExtraRoom> extras;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "hotel_id")
+//    private Hotel hotel;
 
     public Room() {    }
 
@@ -54,8 +53,8 @@ public class Room {
         this.roomType = roomType;
         this.pricePerNight = pricePerNight;
         this.nights = nights;
-        this.extras = extras;
-        this.hotel = hotel;
+//        this.extras = extras;
+//        this.hotel = hotel;
     }
 
     public String getRoomNumber() {
@@ -90,21 +89,21 @@ public class Room {
         this.nights = nights;
     }
 
-    public List<ExtraRoom> getExtras() {
-        return extras;
-    }
-
-    public void setExtras(List<ExtraRoom> extras) {
-        this.extras = extras;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
+//    public List<ExtraRoom> getExtras() {
+//        return extras;
+//    }
+//
+//    public void setExtras(List<ExtraRoom> extras) {
+//        this.extras = extras;
+//    }
+//
+//    public Hotel getHotel() {
+//        return hotel;
+//    }
+//
+//    public void setHotel(Hotel hotel) {
+//        this.hotel = hotel;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -112,12 +111,12 @@ public class Room {
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
         return Objects.equals(roomNumber, room.roomNumber) && roomType == room.roomType
-                && Objects.equals(pricePerNight, room.pricePerNight) && Objects.equals(nights, room.nights)
-                && Objects.equals(extras, room.extras) && Objects.equals(hotel, room.hotel);
+                && Objects.equals(pricePerNight, room.pricePerNight) && Objects.equals(nights, room.nights);
+                //&& Objects.equals(extras, room.extras) && Objects.equals(hotel, room.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber, roomType, pricePerNight, nights, extras, hotel);
+        return Objects.hash(roomNumber, roomType, pricePerNight, nights/*, extras, hotel*/);
     }
 }
