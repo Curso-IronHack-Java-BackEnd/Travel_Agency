@@ -1,12 +1,10 @@
 package com.miguelprojects.travel_agency.Controller;
 
-import com.miguelprojects.travel_agency.DTOs.AgentCreateDTO;
-import com.miguelprojects.travel_agency.DTOs.AgentUpdateDTO;
-import com.miguelprojects.travel_agency.DTOs.ManagerCreateDTO;
-import com.miguelprojects.travel_agency.DTOs.ManagerUpdateDTO;
+import com.miguelprojects.travel_agency.DTOs.*;
 import com.miguelprojects.travel_agency.Models.*;
 import com.miguelprojects.travel_agency.Repository.*;
 import com.miguelprojects.travel_agency.Service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +26,8 @@ public class ManagerController {
     private HotelRepository hotelRepository;
     @Autowired
     private FlightRepository flightRepository;
+    @Autowired
+    private TravelRepository travelRepository;
 
     @Autowired
     private CustomerService customerService;
@@ -39,7 +39,8 @@ public class ManagerController {
     private HotelService hotelService;
     @Autowired
     private FlightService flightService;
-
+    @Autowired
+    private TravelService travelService;
 
     //Obtener todos los managers (getAllManagers)
     @GetMapping
@@ -94,15 +95,15 @@ public class ManagerController {
     //Crear un nuevo agent (create/post)
     @PostMapping("/agents")
     @ResponseStatus(HttpStatus.CREATED)
-    public Agent createAgent(@RequestBody AgentCreateDTO agentDTO) {
+    public Agent createAgent(@Valid @RequestBody AgentCreateDTO agentDTO) {
         return agentService.createAgent(agentDTO);
     }
 
-    //Modificar agent concreto(updateById)
-    @PutMapping("/agents/{id}")
+    //Modificar commissionRate de un agent concreto(patch)
+    @PatchMapping("/agents/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAgent(@PathVariable(name="id") Long agentId, @RequestBody AgentUpdateDTO agentDTO) {
-        agentService.updateAgent(agentId, agentDTO);
+    public void patchAgentCommission(@PathVariable(name="id") Long agentId, @RequestBody AgentCommissionPatchDTO agentCommissionPatchDTO) {
+        agentService.patchAgentCommission(agentId, agentCommissionPatchDTO);
     }
 
     //Eliminar agent (deleteAgentById)
@@ -140,31 +141,26 @@ public class ManagerController {
         return flightService.getAllFlight();
     }
 
-
-
-
-
-
-
-    //Obtener todos los customers(getAllCustomers)
-
-    //Obtener todas las reservations(getAllReservations)
-
-    //Obtener todas las agents(getAllAgents)
-
     //Obtener agents por specialization (getAgentsBySpecialization)
+    @GetMapping("/agents/specialization")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Agent> getAgentsBySpecialization(@RequestParam (name = "specialization")String specialization) {
+        return agentService.agentsBySpecialization(specialization);
+    }
 
-    //Crear su perfil(postManager)
+    //Obtener todos los travels de un Agent(getTravelsByAgentId)
+    @GetMapping("/travels/agents/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Travel> getTravelsByAgentId(@PathVariable(name = "id") Long agentId) {
+        return travelService.getTravelsByAgentId(agentId);
+    }
 
-    //Modificar su propio perfil(updateManagerById)
-
-    //Crear nuevo Agent(postAgent)
-
-    //Eliminar Agent(deleteAgentById)
-
-    //Modificar comissionRate del agent(patchCommisionAgentById)
-
-    //Obtener todos los hoteles, vuelos, habitaciones, amenities, etc (getAll...)
+    //Obtener todos los customers de un Agent(getCustomersByAgentId)
+    @GetMapping("/customers/agents/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Customer> getCustomersByAgentId(@PathVariable(name = "id") Long agentId) {
+        return customerService.getCustomersByAgentId(agentId);
+    }
 
     //Crear nuevos hoteles, vuelos, habitaciones, amenities, etc (post...)
 

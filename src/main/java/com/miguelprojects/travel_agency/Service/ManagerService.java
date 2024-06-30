@@ -1,13 +1,18 @@
 package com.miguelprojects.travel_agency.Service;
 
+import com.miguelprojects.travel_agency.DTOs.AgentCommissionPatchDTO;
 import com.miguelprojects.travel_agency.DTOs.ManagerCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.ManagerUpdateDTO;
 import com.miguelprojects.travel_agency.Models.Manager;
+import com.miguelprojects.travel_agency.Models.Agent;
+import com.miguelprojects.travel_agency.Repository.AgentRepository;
 import com.miguelprojects.travel_agency.Repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -17,6 +22,8 @@ public class ManagerService {
     @Autowired
     private ManagerRepository managerRepository;
 
+    @Autowired
+    private AgentRepository agentRepository;
 
     // Obtener todos los Managers (getAll)
     public List<Manager> getAllManager() {
@@ -77,6 +84,7 @@ public class ManagerService {
         if (managerDTO.getYearsOfExperience() != null){
             updatedManager.setYearsOfExperience(managerDTO.getYearsOfExperience());
         }
+        managerRepository.save(updatedManager);
 
         return updatedManager;
     }

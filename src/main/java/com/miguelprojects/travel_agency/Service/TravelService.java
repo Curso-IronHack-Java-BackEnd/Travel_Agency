@@ -2,16 +2,14 @@ package com.miguelprojects.travel_agency.Service;
 
 import com.miguelprojects.travel_agency.DTOs.TravelCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.TravelUpdateDTO;
-import com.miguelprojects.travel_agency.Models.Customer;
-import com.miguelprojects.travel_agency.Models.Reservation;
-import com.miguelprojects.travel_agency.Models.Travel;
-import com.miguelprojects.travel_agency.Repository.CustomerRepository;
-import com.miguelprojects.travel_agency.Repository.ReservationRepository;
-import com.miguelprojects.travel_agency.Repository.TravelRepository;
+import com.miguelprojects.travel_agency.Models.*;
+import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +24,9 @@ public class TravelService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private AgentRepository agentRepository;
 
 
     // Obtener todos los Travels (getAll)
@@ -83,8 +84,70 @@ public class TravelService {
         if (travelDTO.getFinalPrice() != null){
             updatedTravel.setFinalPrice(travelDTO.getFinalPrice());
         }
+        travelRepository.save(updatedTravel);
 
         return updatedTravel;
+    }
+
+    // Obtener todos los travels de un customer (getTravelByCustomerId)
+    public List <Travel> getTravelsByCustomerId(Long customerId) {
+        Customer customer = customerRepository.findById(customerId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id " +
+                        customerId+ " not found"));
+
+        List<Travel> travels = customer.getTravels();
+
+        return travels;
+    }
+
+    // Obtener todos los Flights de un Travel (getFlightsByTravelId)
+    public List<Flight> getFlightsByTravelId(Long travelId){
+
+        Travel travel = travelRepository.findById(travelId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id " +
+                        travelId+ " not found"));
+
+        List<FlightBooking> flightBookings = travel.getFlightBookings();
+        List<Flight> flights = new ArrayList<>();
+
+        for (FlightBooking flightBooking : flightBookings){
+            flights.add(flightBooking.getFlight());
+        }
+
+        return flights;
+    }
+
+    //Obtener todos los travels de un Agent(getTravelsByAgentId)
+    public List<Travel> getTravelsByAgentId(Long agentId) {
+        Agent agent = agentRepository.findById(agentId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id " +
+                        agentId+ " not found"));
+
+        List<Travel> travels = new ArrayList<>();
+
+        List<Reservation> reservations = agent.getReservations();
+        for (Reservation reservation : reservations){
+            travels.add(reservation.getTravel());
+        }
+        return travels;
+    }
+
+
+
+    // Obtener todos los Hotels de un Travel (getHotelsByTravelId)
+    public List<Hotel> getHotelsByTravelId(Long travelId){
+
+        Travel travel = travelRepository.findById(travelId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id " +
+                        travelId+ " not found"));
+
+        List<HotelBooking> hotelBookings = travel.getHotelBookings();
+        List<Hotel> hotels = new ArrayList<>();
+
+        for (HotelBooking hotelBooking : hotelBookings){
+            hotels.add(hotelBooking.getHotel());
+        }
+        return hotels;
     }
 
 }

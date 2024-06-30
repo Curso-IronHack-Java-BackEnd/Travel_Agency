@@ -94,19 +94,30 @@ create table reservations
         foreign key (customer_id) references customers (customer_id)
 );
 
+create table bills
+(
+    bill_id          bigint auto_increment
+        primary key,
+    flightBookingPrice      decimal(10, 2)      not null,
+    hotelBookingPrice       decimal(10, 2)      null,
+    totalBookingPrice       decimal(10, 2)      null
+);
 create table travels
 (
     travel_id           bigint auto_increment
         primary key,
     destination         varchar(255)     null,
-    duration            varchar(255)     not null,
+    duration            int              not null,
     final_price         decimal(10, 2)   not null,
     customer_id         bigint           null,
     reservation_code    varchar(255)     null,
+    bill_id             bigint           null,
     constraint FK3bskbjk539qje74j8kf7xdxl1
         foreign key (customer_id) references customers (customer_id),
     constraint FKtrvp5this75t6jt6rj93od7u5
-        foreign key (reservation_code) references reservations (reservation_code)
+        foreign key (reservation_code) references reservations (reservation_code),
+    constraint billToTravel
+        foreign key (bill_id) references bills (bill_id)
 );
 
 create table hotel_bookings
@@ -186,12 +197,12 @@ create table extras_at_hotel
     extra_at_hotel_id    int auto_increment
         primary key,
     hotel_booking_id       bigint               null,
-    extra_id               int                  null,
+    hotel_extra_id               int                  null,
 
      constraint hotelBookingToExtraHotel
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id),
      constraint extraHotelToHotelBooking
-        foreign key (extra_id) references hotel_extras (extra_id)
+        foreign key (hotel_extra_id) references hotel_extras (extra_id)
 );
 
 create table room_extras
@@ -211,12 +222,12 @@ create table extras_at_room
     extra_at_room_id    int auto_increment
         primary key,
     hotel_booking_id       bigint               null,
-    extra_id               int                  null,
+    room_extra_id               int                  null,
 
      constraint hotelBookingToExtraRoom
         foreign key (hotel_booking_id) references hotel_bookings (hotel_booking_id),
      constraint extraRoomToHotelBooking
-        foreign key (extra_id) references room_extras (extra_id)
+        foreign key (room_extra_id) references room_extras (extra_id)
 );
 
 INSERT INTO customers (first_name, last_name, phone_number, email, address, date_of_birth) VALUES
@@ -285,20 +296,19 @@ INSERT INTO reservations (reservation_code, adults, children, promotions, paymen
     ('MN435', 4, 1, 'NONE', 'DEBIT_CARD', 'CONFIRMED', 200, '2024-05-20', 1, 3),
     ('HG456', 3, 0, 'EARLY_BOOKING', 'CREDIT_CARD', 'ON_HOLD', 0, '2024-06-16', 4, 4);
 
-INSERT INTO travels (destination, duration, final_price, customer_id, reservation_code) VALUES
-    ('Buenos Aires', 6, 4430, 1, 'AD456'),
-    ('Barcelona', 4, 316, 2, 'RT909'),
-    ('Viena', 10, 2685, 3, 'VD756'),
-    ('Hampshire', 14, 1820, 5, 'GH990'),
-    ('Ischia', 6, 741, 6, 'DF549'),
-    ('Toledo', 10, 250, 1, 'KO672'),
-    ('Dubai', 8, 14112, 2, 'KO788'),
-    ('Europe', 20, 12290, 3, 'MN435'),
-    ('America', 22, 42611, 4, 'HG456');
+INSERT INTO travels (destination, duration, final_price, customer_id, reservation_code, bill_id) VALUES
+    ('Buenos Aires', 6, 4430, 1, 'AD456',null),
+    ('Barcelona', 4, 316, 2, 'RT909', null),
+    ('Viena', 10, 2685, 3, 'VD756',null),
+    ('Hampshire', 14, 1820, 5, 'GH990',null),
+    ('Ischia', 6, 741, 6, 'DF549',null),
+    ('Toledo', 10, 250, 1, 'KO672',null),
+    ('Dubai', 8, 14112, 2, 'KO788',null),
+    ('Europe', 20, 12290, 3, 'MN435',null),
+    ('America', 22, 42611, 4, 'HG456',null);
 
 INSERT INTO hotel_bookings (duration, hotel_booking_price, hotel_id, reservation_code, travel_id) VALUES
     (6, 270, 2, 'AD456', 1),
-    (4, 0, null, 'RT909', 2),
     (10, 670, 6, 'VD756', 3),
     (14, 520, 3, 'GH990', 4),
     (6, 160, 4, 'DF549', 5),
@@ -317,7 +327,6 @@ INSERT INTO flight_bookings (flight_booking_price, reservation_code, travel_id, 
     (1960, 'VD756', 3, 6),
     (1170, 'GH990', 4, 4),
     (306, 'DF549', 5, 5),
-    (0, 'KO672', 6, null),
     (3950, 'KO788', 7, 9),
     (1160, 'MN435', 8, 7),
     (265, 'MN435', 8, 10),
@@ -349,8 +358,7 @@ INSERT INTO amenities_at_hotel (hotel_booking_id, amenity_id) VALUES
     (9,1),  (9,3),  (9,4),  (9,5),  (9,6),  (9,7),
     (10,1), (10,2), (10,3), (10,4), (10,5), (10,6), (10,7), (10,8),
     (11,1), (11,2), (11,3), (11,5), (11,6), (11,7), (11,8),
-    (12,1), (12,2), (12,3), (12,4), (12,6), (12,7),
-    (13,1), (13,2), (13,3), (13,4), (13,5), (13,6), (13,7), (13,8);
+    (12,1), (12,2), (12,3), (12,4), (12,6), (12,7);
 
 INSERT INTO hotel_extras (name, description, extra_price) VALUES
     ('Extra bed / crib', 'For stays with children or babies', 10),
@@ -364,7 +372,7 @@ INSERT INTO hotel_extras (name, description, extra_price) VALUES
     ('Balcony or terrace', 'To enjoy the outdoors', 30),
     ('Panoramic views', 'Some rooms offer special views', 50);
 
-INSERT INTO extras_at_hotel (hotel_booking_id, extra_id) VALUES
+INSERT INTO extras_at_hotel (hotel_booking_id, hotel_extra_id) VALUES
     (1,1),  (1,3),  (1,8),  (1,9),
     (3,3),  (3,4),  (3,8),
     (4,1),  (4,3),  (4,4),  (4,8),
@@ -375,8 +383,7 @@ INSERT INTO extras_at_hotel (hotel_booking_id, extra_id) VALUES
     (9,3),  (9,4),  (9,8),  (9,9),
     (10,3), (10,4), (10,8), (10,9),
     (11,3), (11,4), (11,8), (11,10),
-    (12,2), (12,3), (12,4), (12,5), (12,6),
-    (13,2), (13,3), (13,4), (13,5), (13,6), (13,10);
+    (12,2), (12,3), (12,4), (12,5), (12,6);
 
 INSERT INTO room_extras (name, description, extra_price) VALUES
     ('Early Check-in and Late Check-out', 'Flexible check-in and check-out times', 0),
@@ -396,7 +403,7 @@ INSERT INTO room_extras (name, description, extra_price) VALUES
     ('Spa', 'Massages, facials, and other beauty and wellness treatments', 60),
     ('Recreational Activities', 'Yoga, hiking trails, bike tours, aquatic sports, etc', 30);
 
-INSERT INTO extras_at_room (hotel_booking_id, extra_id) VALUES
+INSERT INTO extras_at_room (hotel_booking_id,room_extra_id) VALUES
     (1,2),  (1,3),  (1,6),  (1,8),
     (3,1),  (3,6),  (3,8),  (2,13), (2,16),
     (4,1),  (4,4),  (4,6),  (4,16),
@@ -407,7 +414,6 @@ INSERT INTO extras_at_room (hotel_booking_id, extra_id) VALUES
     (9,4),  (9,5),  (9,6),  (9,14),
     (10,1), (10,4), (10,14),
     (11,1), (11,4), (11,5), (11,14),
-    (12,1), (12, 4), (12,5), (12,14), (12,16),
-    (13,1), (13, 4), (13,6), (13,13);
+    (12,1), (12, 4), (12,5), (12,14), (12,16);
 
 

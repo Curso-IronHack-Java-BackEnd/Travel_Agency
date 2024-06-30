@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.DynamicUpdate;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -54,24 +55,24 @@ public class Hotel {
 
     @Column(name = "price_children")
     @Digits(integer = 6, fraction = 2, message = "Wrong Price Format")
-    @NotBlank(message = "Price per Children is mandatory")
+    @NotNull(message = "Price per Children is mandatory")
     private BigDecimal priceChildren;
 
     @Column(name = "price_adult")
     @Digits(integer = 6, fraction = 2, message = "Wrong Price Format")
-    @NotBlank(message = "Price per Adult is mandatory")
+    @NotNull(message = "Price per Adult is mandatory")
     private BigDecimal priceAdult;
 
     @JsonIgnore
-    @OneToOne(mappedBy="hotel")
-    private HotelBooking hotelBooking;
+    @OneToMany(mappedBy="hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HotelBooking> hotelBookings;
 
 
     public Hotel() {    }
 
     public Hotel(String name, String address, String city, String country, String phoneNumber,
                  String email, BigDecimal rating, HotelType hotelType, Integer numberOfRooms,
-                 BigDecimal priceChildren, BigDecimal priceAdult, HotelBooking hotelBooking) {
+                 BigDecimal priceChildren, BigDecimal priceAdult, List<HotelBooking> hotelBookings) {
         this.name = name;
         this.address = address;
         this.city = city;
@@ -83,7 +84,7 @@ public class Hotel {
         this.numberOfRooms = numberOfRooms;
         this.priceChildren = priceChildren;
         this.priceAdult = priceAdult;
-        this.hotelBooking = hotelBooking;
+        this.hotelBookings = hotelBookings;
     }
 
     public Long getHotelId() {
@@ -178,12 +179,12 @@ public class Hotel {
         this.priceAdult = priceAdult;
     }
 
-    public HotelBooking getHotelBooking() {
-        return hotelBooking;
+    public List<HotelBooking> getHotelBookings() {
+        return hotelBookings;
     }
 
-    public void setHotelBooking(HotelBooking hotelBooking) {
-        this.hotelBooking = hotelBooking;
+    public void setHotelBookings(List<HotelBooking> hotelBooking) {
+        this.hotelBookings = hotelBooking;
     }
 
     @Override
@@ -197,12 +198,12 @@ public class Hotel {
                 && Objects.equals(email, hotel.email) && Objects.equals(rating, hotel.rating)
                 && hotelType == hotel.hotelType && Objects.equals(numberOfRooms, hotel.numberOfRooms)
                 && Objects.equals(priceChildren, hotel.priceChildren) && Objects.equals(priceAdult, hotel.priceAdult)
-                && Objects.equals(hotelBooking, hotel.hotelBooking);
+                && Objects.equals(hotelBookings, hotel.hotelBookings);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(hotelId, name, address, city, country, phoneNumber, email, rating,
-                hotelType, numberOfRooms, priceChildren, priceAdult, hotelBooking);
+                hotelType, numberOfRooms, priceChildren, priceAdult, hotelBookings);
     }
 }

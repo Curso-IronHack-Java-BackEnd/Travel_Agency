@@ -2,12 +2,18 @@ package com.miguelprojects.travel_agency.Service;
 
 import com.miguelprojects.travel_agency.DTOs.CustomerUpdateDTO;
 import com.miguelprojects.travel_agency.DTOs.CustomerCreateDTO;
+import com.miguelprojects.travel_agency.Models.Agent;
 import com.miguelprojects.travel_agency.Models.Customer;
+import com.miguelprojects.travel_agency.Models.Reservation;
+import com.miguelprojects.travel_agency.Models.Travel;
+import com.miguelprojects.travel_agency.Repository.AgentRepository;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,6 +22,8 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private AgentRepository agentRepository;
 
 
     // Obtener todos los Customers (getAll)
@@ -78,6 +86,24 @@ public class CustomerService {
             updatedCustomer.setDateOfBirth(customerDTO.getDateOfBirth());
         }
 
+        customerRepository.save(updatedCustomer);
+
         return updatedCustomer;
     }
+
+    //Obtener todos los customers por Agent (getCustomerByAgentId)
+    public List<Customer> getCustomersByAgentId(Long agentId) {
+        Agent agent = agentRepository.findById(agentId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id " +
+                        agentId+ " not found"));
+
+        List<Customer> customers = new ArrayList<>();
+
+        List<Reservation> reservations = agent.getReservations();
+        for (Reservation reservation : reservations){
+            customers.add(reservation.getCustomer());
+        }
+        return customers;
+    }
+
 }

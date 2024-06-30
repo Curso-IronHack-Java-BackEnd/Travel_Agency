@@ -1,7 +1,6 @@
 package com.miguelprojects.travel_agency.Service;
 
-import com.miguelprojects.travel_agency.DTOs.AgentCreateDTO;
-import com.miguelprojects.travel_agency.DTOs.AgentUpdateDTO;
+import com.miguelprojects.travel_agency.DTOs.*;
 import com.miguelprojects.travel_agency.Models.*;
 import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class AgentService {
         agentRepository.delete(agent);
     }
 
-    // Crear nuevo Agent (create/post)
+    // Crear nuevo Agent (create/post by manager)
     public Agent createAgent (AgentCreateDTO agentDTO){
 
         Manager manager = managerRepository.findById(agentDTO.getManagerId()).
@@ -59,6 +58,20 @@ public class AgentService {
         newAgent.setSpecialization(agentDTO.getSpecialization());
         newAgent.setCommissionRate(agentDTO.getCommissionRate());
         newAgent.setManager(manager);
+
+        return agentRepository.save(newAgent);
+    }
+
+    // Crear nuevo Agent (create/post by him/herself)
+    public Agent selfCreateAgent (AgentSelfCreateDTO agentDTO){
+
+        Agent newAgent = new Agent();
+        newAgent.setFirstName(agentDTO.getFirstName());
+        newAgent.setLastName(agentDTO.getLastName());
+        newAgent.setPhoneNumber(agentDTO.getPhoneNumber());
+        newAgent.setEmail(agentDTO.getEmail());
+        newAgent.setSpecialization(agentDTO.getSpecialization());
+
 
         return agentRepository.save(newAgent);
     }
@@ -85,18 +98,25 @@ public class AgentService {
             updatedAgent.setSpecialization(agentDTO.getSpecialization());
         }
 
+        agentRepository.save(updatedAgent);
+
         return updatedAgent;
     }
 
+    // Modificar la commissionRate de un Agent concreto (patchCommisionRateByAgentId)
+    public void patchAgentCommission (Long agentId, AgentCommissionPatchDTO agentCommissionPatchDTO){
 
+        Agent updatedAgent = agentRepository.findById(agentId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + agentId +" not found"));
 
+        if (agentCommissionPatchDTO.getCommissionRate() != null){
+            updatedAgent.setCommissionRate(agentCommissionPatchDTO.getCommissionRate());
+        }
+        agentRepository.save(updatedAgent);
+    }
 
-
-
-
-
-
-
-
-
+    //Obtener todos los Agents con una specialization concreta (findBySpecialization)
+    public List<Agent> agentsBySpecialization(String specialization){
+        return agentRepository.findBySpecialization(specialization);
+    }
 }

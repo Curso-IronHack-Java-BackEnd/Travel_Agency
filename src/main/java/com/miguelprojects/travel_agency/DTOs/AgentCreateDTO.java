@@ -15,13 +15,13 @@ public class AgentCreateDTO extends User {
 
     private String specialization;
 
-    @NotBlank
+    @NotNull
     @Min(value =1, message = "The commision rate must be at least 1%")
     @Max(value =15, message = "The commision rate must be a maximum of 15%")
     @Digits(integer = 4, fraction = 2, message = "Wrong Rating Format")
     private BigDecimal commissionRate;
 
-    @NotBlank
+    @NotNull
     private Long managerId;
 
 }

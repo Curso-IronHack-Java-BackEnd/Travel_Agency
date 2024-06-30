@@ -21,7 +21,7 @@ public class ReservationCreateDTO {
     @NotBlank
     private String reservationCode;
 
-    @NotBlank(message = "Number of adults is mandatory")
+    @NotNull(message = "Number of adults is mandatory")
     private Integer adults;
 
     private Integer children;
@@ -31,24 +31,24 @@ public class ReservationCreateDTO {
     private Promotions promotions;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Payment Method is mandatory")
+    @NotNull(message = "Payment Method is mandatory")
     private PaymentMethod paymentMethod;
 
-    @NotBlank(message = "Reservation Status is mandatory")
+    @NotNull(message = "Reservation Status is mandatory")
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    @NotBlank(message = "Deposit is mandatory")
+    @NotNull(message = "Deposit is mandatory")
     @Min(value = 0, message = "Deposit must be positive or 0")
     private BigDecimal deposit;
 
     @Past(message = "Reservation must have been made in the past")
     private LocalDateTime dateOfReservation;
 
-    @NotBlank
+    @NotNull
     private Long agentId;
 
-    @NotBlank
+    @NotNull
     private Long customerId;
 
 }

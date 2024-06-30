@@ -4,6 +4,7 @@ import com.miguelprojects.travel_agency.DTOs.ReservationCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.ReservationUpdateDTO;
 import com.miguelprojects.travel_agency.Models.Agent;
 import com.miguelprojects.travel_agency.Models.Customer;
+import com.miguelprojects.travel_agency.Models.Flight;
 import com.miguelprojects.travel_agency.Models.Reservation;
 import com.miguelprojects.travel_agency.Repository.AgentRepository;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -100,6 +103,8 @@ public class ReservationService {
         if (reservationDTO.getDateOfReservation() != null){
             updatedReservation.setDateOfReservation(reservationDTO.getDateOfReservation());
         }
+
+        reservationRepository.save(updatedReservation);
 
         return updatedReservation;
     }

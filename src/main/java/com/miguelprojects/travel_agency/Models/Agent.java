@@ -21,18 +21,18 @@ public class Agent extends User{
 
     private String specialization;
 
-    @NotBlank
+    @NotNull
     @Column(name = "commission_rate")
     @Min(value =1, message = "The commision rate must be at least 1%")
     @Max(value =15, message = "The commision rate must be a maximum of 15%")
     @Digits(integer = 4, fraction = 2, message = "Wrong Rating Format")
-    private BigDecimal commissionRate;
+    private BigDecimal commissionRate = BigDecimal.ONE;
 
     @JsonIgnore
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id")
     private Manager manager;
 

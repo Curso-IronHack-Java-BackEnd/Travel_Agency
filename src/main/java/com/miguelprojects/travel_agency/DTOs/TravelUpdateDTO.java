@@ -13,7 +13,7 @@ public class TravelUpdateDTO {
 
     private String destination;
 
-    private String duration;
+    private Integer duration;
 
     private BigDecimal finalPrice;
 

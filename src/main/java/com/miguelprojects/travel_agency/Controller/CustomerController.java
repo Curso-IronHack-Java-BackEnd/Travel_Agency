@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/customers")
@@ -59,32 +61,25 @@ public class CustomerController {
         return customerService.createCustomer(customer);
     }
 
-    // Ver todos los detalles del travel (getTravelByCustomerId)
-    @GetMapping("/travels/{id}")
+    // Ver todos los detalles del travel (getTravelByCustomerId) (SOLO SU VIAJE)
+    @GetMapping("/travels")
     @ResponseStatus(HttpStatus.OK)
-    public Travel getTravelById(@RequestParam (name = "id")Long travelId) {
-        return travelRepository.findById(travelId).orElseThrow
+    public List<Travel> getTravelByCustomerId(@RequestParam (name = "id")Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        return customer.getTravels();
     }
 
-    // Ver todos los detalles de la reservation (getReservationByCustomerId)
-    @GetMapping("/reservations/{id}")
+    // Ver todos los detalles de la reservation (getReservationByCustomerId) (SOLO SU RESERVA)
+    @GetMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
-    public Reservation getReservationById(@RequestParam (name = "id")String reservationCode) {
-        return reservationRepository.findById(reservationCode).orElseThrow
+    public List<Reservation> getReservationByCustomerId(@RequestParam (name = "id")Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        return customer.getReservations();
     }
 
 
+    //Obtener Bills por cada Travel
 
-
-
-
-
-
-    //Get reservation details(getReservationByCustomerId)
-//    @GetMapping("/reservations/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Reservation getReservationById(@RequestParam Long id) {
-//    }
 }

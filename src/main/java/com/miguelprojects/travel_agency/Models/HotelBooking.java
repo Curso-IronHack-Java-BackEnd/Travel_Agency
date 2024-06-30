@@ -6,12 +6,17 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name ="hotel_bookings")
 @DynamicUpdate
@@ -25,135 +30,60 @@ public class HotelBooking {
     @Min(value = 1, message = "Minimum stay is 1 day")
     private Integer duration;
 
+    @JsonIgnore
     @Column(name = "hotel_booking_price")
     @Digits(integer = 8, fraction = 2, message = "Wrong Price Format")
-    @NotBlank(message = "Booking price for hotel is mandatory")
+    @NotNull(message = "Booking price for hotel is mandatory")
     private BigDecimal hotelBookingPrice;
 
     @NotNull(message = "Hotel Id is mandatory")
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="hotel_id")
     private Hotel hotel;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "reservation_code")
     private Reservation reservation;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "travel_id")
     private Travel travel;
 
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "bill_id")
+//    private Bill bill;
+
     @JsonIgnore
-    @ManyToMany(mappedBy = "hotelBookings")
+    @ManyToMany(mappedBy = "hotelBookings", fetch = FetchType.EAGER)
     private List<Amenity> amenities;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "hotelBookings")
+    @ManyToMany(mappedBy = "hotelBookings", fetch = FetchType.EAGER)
     private List<ExtraHotel> hotelExtras;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "hotelBookings")
+    @ManyToMany(mappedBy = "hotelBookings", fetch = FetchType.EAGER)
     private List<ExtraRoom> roomExtras;
 
-    public HotelBooking() {    }
-
-    public HotelBooking(Long hotelBookingId, Integer duration, BigDecimal hotelBookingPrice,
-                        Hotel hotel, Reservation reservation, Travel travel, List<Amenity> amenities,
-                        List<ExtraHotel> hotelExtras, List<ExtraRoom> roomExtras) {
-        this.hotelBookingId = hotelBookingId;
-        this.duration = duration;
-        this.hotelBookingPrice = hotelBookingPrice;
-        this.hotel = hotel;
-        this.reservation = reservation;
-        this.travel = travel;
-        this.amenities = amenities;
-        this.hotelExtras = hotelExtras;
-        this.roomExtras = roomExtras;
+    public BigDecimal totalPriceHotelBooking(){
+        Reservation reservation = getReservation();
+        Hotel hotel = getHotel();
+        BigDecimal roomExtrasTotalPrice = BigDecimal.ZERO;
+        BigDecimal hotelExtrasTotalPrice = BigDecimal.ZERO;
+        List<ExtraHotel> hotelExtras = getHotelExtras();
+        for (ExtraHotel extraHotel : hotelExtras) {
+            hotelExtrasTotalPrice.add(extraHotel.getExtraPrice());
+        }
+        List<ExtraRoom> roomExtras = getRoomExtras();
+        for (ExtraRoom extraRoom : roomExtras) {
+            roomExtrasTotalPrice.add(extraRoom.getExtraPrice());
+        }
+        Integer children = reservation.getChildren();
+        Integer adults = reservation.getAdults();
+        BigDecimal priceChildren = hotel.getPriceChildren().multiply(BigDecimal.valueOf(children));
+        BigDecimal priceAdults = hotel.getPriceAdult().multiply(BigDecimal.valueOf(adults));
+        return priceChildren.add(priceAdults).add(hotelExtrasTotalPrice).add(roomExtrasTotalPrice);
     }
 
-    public Long getHotelBookingId() {
-        return hotelBookingId;
-    }
 
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public BigDecimal getHotelBookingPrice() {
-        return hotelBookingPrice;
-    }
-
-    public void setHotelBookingPrice(BigDecimal hotelBookingPrice) {
-        this.hotelBookingPrice = hotelBookingPrice;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public Travel getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Travel travel) {
-        this.travel = travel;
-    }
-
-    public List<Amenity> getAmenities() {
-        return amenities;
-    }
-
-    public void setAmenities(List<Amenity> amenities) {
-        this.amenities = amenities;
-    }
-
-    public List<ExtraHotel> getHotelExtras() {
-        return hotelExtras;
-    }
-
-    public void setHotelExtras(List<ExtraHotel> hotelExtras) {
-        this.hotelExtras = hotelExtras;
-    }
-
-    public List<ExtraRoom> getRoomExtras() {
-        return roomExtras;
-    }
-
-    public void setRoomExtras(List<ExtraRoom> roomExtras) {
-        this.roomExtras = roomExtras;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HotelBooking that = (HotelBooking) o;
-        return Objects.equals(hotelBookingId, that.hotelBookingId) && Objects.equals(duration, that.duration)
-                && Objects.equals(hotelBookingPrice, that.hotelBookingPrice) && Objects.equals(hotel, that.hotel)
-                && Objects.equals(reservation, that.reservation) && Objects.equals(travel, that.travel)
-                && Objects.equals(amenities, that.amenities) && Objects.equals(hotelExtras, that.hotelExtras)
-                && Objects.equals(roomExtras, that.roomExtras);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(hotelBookingId, duration, hotelBookingPrice, hotel,
-                reservation, travel, amenities, hotelExtras, roomExtras);
-    }
 }

@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ExtraRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "extra_room_id")
+    @Column(name = "extra_id")
     private Integer extraId;
 
     @NotBlank(message = "Name is mandatory")
@@ -26,9 +26,9 @@ public class ExtraRoom {
     private BigDecimal extraPrice;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "extras_at_room",
-            joinColumns = @JoinColumn(name = "room_extra_id", referencedColumnName = "extra_room_id"),
+            joinColumns = @JoinColumn(name = "room_extra_id", referencedColumnName = "extra_id"),
             inverseJoinColumns = @JoinColumn(name = "hotel_booking_id", referencedColumnName = "hotel_booking_id"))
     private List<HotelBooking> hotelBookings;
 

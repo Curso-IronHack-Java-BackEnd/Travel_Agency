@@ -1,5 +1,6 @@
 package com.miguelprojects.travel_agency.Service;
 
+import com.miguelprojects.travel_agency.Models.Amenity;
 import com.miguelprojects.travel_agency.Models.Hotel;
 import com.miguelprojects.travel_agency.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class HotelService {
 
         hotelRepository.delete(hotel);
     }
+
 
     // Crear nuevo Hotel (create/post)
     // Modificar un Hotel concreto (update/ById)

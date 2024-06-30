@@ -1,8 +1,14 @@
 package com.miguelprojects.travel_agency.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.miguelprojects.travel_agency.Repository.FlightBookingRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -11,89 +17,44 @@ import java.util.Objects;
 @Entity
 @Table(name ="flight_bookings")
 @DynamicUpdate
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FlightBooking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flight_booking_id")
     private Long flightBookingId;
 
+    @JsonIgnore
     @Column(name = "flight_booking_price")
     @Digits(integer = 8, fraction = 2, message = "Wrong Price Format")
-    @NotBlank(message = "Booking price for flight is mandatory")
+    @NotNull(message = "Booking price for flight is mandatory")
     private BigDecimal flightBookingPrice;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "reservation_code")
     private Reservation reservation;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "travel_id")
     private Travel travel;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="flight_id")
     private Flight flight;
 
-    public FlightBooking() {    }
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "bill_id")
+//    private Bill bill;
 
-    public FlightBooking(Long flightBookingId, BigDecimal flightBookingPrice,
-                         Reservation reservation, Travel travel, Flight flight) {
-        this.flightBookingId = flightBookingId;
-        this.flightBookingPrice = flightBookingPrice;
-        this.reservation = reservation;
-        this.travel = travel;
-        this.flight = flight;
+    public BigDecimal totalPriceFlightBooking(FlightBooking flightBooking){
+        Reservation reservation = flightBooking.getReservation();
+        Flight flight = flightBooking.getFlight();
+        Integer children = reservation.getChildren();
+        Integer adults = reservation.getAdults();
+        BigDecimal price = flight.getPrice();
+        return price.multiply(BigDecimal.valueOf(children)).add(BigDecimal.valueOf(adults));
     }
 
-    public Long getFlightBookingId() {
-        return flightBookingId;
-    }
-
-    public BigDecimal getFlightBookingPrice() {
-        return flightBookingPrice;
-    }
-
-    public void setFlightBookingPrice(BigDecimal flightBookingPrice) {
-        this.flightBookingPrice = flightBookingPrice;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public Travel getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Travel travel) {
-        this.travel = travel;
-    }
-
-    public Flight getFlight() {
-        return flight;
-    }
-
-    public void setFlight(Flight flight) {
-        this.flight = flight;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FlightBooking that = (FlightBooking) o;
-        return Objects.equals(flightBookingId, that.flightBookingId)
-                && Objects.equals(flightBookingPrice, that.flightBookingPrice)
-                && Objects.equals(reservation, that.reservation) && Objects.equals(travel, that.travel)
-                && Objects.equals(flight, that.flight);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(flightBookingId, flightBookingPrice, reservation, travel, flight);
-    }
 }

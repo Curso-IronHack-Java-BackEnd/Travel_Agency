@@ -23,7 +23,7 @@ public class Amenity {
     private String description;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "amenities_at_hotel",
             joinColumns = @JoinColumn(name = "amenity_id", referencedColumnName = "amenity_id"),
             inverseJoinColumns = @JoinColumn(name = "hotel_booking_id", referencedColumnName = "hotel_booking_id"))

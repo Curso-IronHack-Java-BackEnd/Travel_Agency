@@ -1,5 +1,7 @@
 package com.miguelprojects.travel_agency.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,18 +14,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class TravelCreateDTO {
 
-    @NotNull(message = "Destination is mandatory")
+    @NotBlank(message = "Destination is mandatory")
     private String destination;
 
     @NotNull(message = "Duration is mandatory")
-    private String duration;
+    private Integer duration;
 
     @NotNull(message = "Final price is mandatory")
     private BigDecimal finalPrice;
 
-
+    @NotNull
     private Long customerId;
 
+    @NotNull
     private String reservationCode;
 
 }

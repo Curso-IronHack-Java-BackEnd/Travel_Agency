@@ -26,7 +26,7 @@ public class ExtraHotel {
     private BigDecimal extraPrice;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "extras_at_hotel",
             joinColumns = @JoinColumn(name = "hotel_extra_id", referencedColumnName = "extra_id"),
             inverseJoinColumns = @JoinColumn(name = "hotel_booking_id", referencedColumnName = "hotel_booking_id"))

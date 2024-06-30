@@ -19,7 +19,7 @@ public class Room {
     private String roomNumber;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Room Type is mandatory")
+    @NotNull(message = "Room Type is mandatory")
     @Column(name = "room_type")
     private RoomType roomType;
 

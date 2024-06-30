@@ -25,7 +25,7 @@ public class Reservation {
     @Column(name = "reservation_code")
     private String reservationCode;
 
-    @NotBlank(message = "Number of adults is mandatory")
+    @NotNull(message = "Number of adults is mandatory")
     private Integer adults;
 
     private Integer children;
@@ -36,7 +36,7 @@ public class Reservation {
 
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Payment Method is mandatory")
+    @NotNull(message = "Payment Method is mandatory")
     private PaymentMethod paymentMethod;
 
     @Column(name = "reservation_status")
@@ -52,11 +52,12 @@ public class Reservation {
     @Past(message = "Reservation must have been made in the past")
     private LocalDateTime dateOfReservation;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "agent_id")
     private Agent agent;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -69,7 +70,7 @@ public class Reservation {
     private List<FlightBooking> flightBookings = new ArrayList<>();
 
     @JsonIgnore
-    @OneToOne(mappedBy="reservation")
+    @OneToOne(mappedBy="reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Travel travel;
 
     public Reservation() {    }

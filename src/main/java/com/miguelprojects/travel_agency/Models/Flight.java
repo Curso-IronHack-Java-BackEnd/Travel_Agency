@@ -10,7 +10,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -50,13 +51,13 @@ public class Flight {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "departure_time")
-    private LocalDateTime departureTime;
+    private LocalTime departureTime;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "arrival_time")
-    private LocalDateTime arrivalTime;
+    private LocalTime arrivalTime;
 
-    @NotBlank(message = "Price is mandatory")
+    @NotNull(message = "Price is mandatory")
     private BigDecimal price;
 
     @NotBlank(message = "Seat Number is mandatory")
@@ -69,14 +70,14 @@ public class Flight {
     private TicketClass ticketClass;
 
     @JsonIgnore
-    @OneToOne(mappedBy="flight")
-    private FlightBooking flightBooking;
+    @OneToMany(mappedBy="flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FlightBooking> flightBookings;
 
     public Flight() {    }
 
     public Flight(String flightNumber, String airline, String aircraft, String origin, String destination,
-                  Integer mileage, Integer duration, LocalDate dateOfFlight, LocalDateTime departureTime,
-                  LocalDateTime arrivalTime, BigDecimal price, String seatNumber, TicketClass ticketClass) {
+                  Integer mileage, Integer duration, LocalDate dateOfFlight, LocalTime departureTime,
+                  LocalTime arrivalTime, BigDecimal price, String seatNumber, TicketClass ticketClass) {
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.aircraft = aircraft;
@@ -161,19 +162,19 @@ public class Flight {
         this.dateOfFlight = dateOfFlight;
     }
 
-    public LocalDateTime getDepartureTime() {
+    public LocalTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
+    public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalDateTime getArrivalTime() {
+    public LocalTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime) {
+    public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
