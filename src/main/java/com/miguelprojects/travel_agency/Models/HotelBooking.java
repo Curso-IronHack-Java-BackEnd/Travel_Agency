@@ -37,15 +37,15 @@ public class HotelBooking {
     private BigDecimal hotelBookingPrice;
 
     @NotNull(message = "Hotel Id is mandatory")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name="hotel_id")
     private Hotel hotel;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "reservation_code")
-    private Reservation reservation;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "reservation_code")
+//    private Reservation reservation;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "travel_id")
     private Travel travel;
 
@@ -66,7 +66,8 @@ public class HotelBooking {
     private List<ExtraRoom> roomExtras;
 
     public BigDecimal totalPriceHotelBooking(){
-        Reservation reservation = getReservation();
+        Travel travel = getTravel();
+        Reservation reservation = travel.getReservation();
         Hotel hotel = getHotel();
         BigDecimal roomExtrasTotalPrice = BigDecimal.ZERO;
         BigDecimal hotelExtrasTotalPrice = BigDecimal.ZERO;

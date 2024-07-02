@@ -53,32 +53,31 @@ public class Reservation {
     private LocalDateTime dateOfReservation;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "agent_id")
     private Agent agent;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HotelBooking> hotelBookings = new ArrayList<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<HotelBooking> hotelBookings = new ArrayList<>();
+//
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<FlightBooking> flightBookings = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FlightBooking> flightBookings = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToOne(mappedBy="reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy="reservation", cascade = CascadeType.ALL)
     private Travel travel;
 
     public Reservation() {    }
 
     public Reservation(String reservationCode, Integer adults, Integer children, Promotions promotions,
                        PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal deposit,
-                       LocalDateTime dateOfReservation, Agent agent, Customer customer, List<HotelBooking> hotelBookings,
-                       List<FlightBooking> flightBookings, Travel travel) {
+                       LocalDateTime dateOfReservation, Agent agent, Customer customer, Travel travel) {
         this.reservationCode = reservationCode;
         this.adults = adults;
         this.children = children;
@@ -89,8 +88,8 @@ public class Reservation {
         this.dateOfReservation = dateOfReservation;
         this.agent = agent;
         this.customer = customer;
-        this.hotelBookings = hotelBookings;
-        this.flightBookings = flightBookings;
+//        this.hotelBookings = hotelBookings;
+//        this.flightBookings = flightBookings;
         this.travel = travel;
     }
 
@@ -174,21 +173,21 @@ public class Reservation {
         this.customer = customer;
     }
 
-    public List<HotelBooking> getHotelBookings() {
-        return hotelBookings;
-    }
-
-    public void setHotelBookings(List<HotelBooking> hotelBookings) {
-        this.hotelBookings = hotelBookings;
-    }
-
-    public List<FlightBooking> getFlightBookings() {
-        return flightBookings;
-    }
-
-    public void setFlightBookings(List<FlightBooking> flightBookings) {
-        this.flightBookings = flightBookings;
-    }
+//    public List<HotelBooking> getHotelBookings() {
+//        return hotelBookings;
+//    }
+//
+//    public void setHotelBookings(List<HotelBooking> hotelBookings) {
+//        this.hotelBookings = hotelBookings;
+//    }
+//
+//    public List<FlightBooking> getFlightBookings() {
+//        return flightBookings;
+//    }
+//
+//    public void setFlightBookings(List<FlightBooking> flightBookings) {
+//        this.flightBookings = flightBookings;
+//    }
 
     public Travel getTravel() {
         return travel;
@@ -209,14 +208,12 @@ public class Reservation {
                 && reservationStatus == that.reservationStatus && Objects.equals(deposit, that.deposit)
                 && Objects.equals(dateOfReservation, that.dateOfReservation)
                 && Objects.equals(agent, that.agent) && Objects.equals(customer, that.customer)
-                && Objects.equals(hotelBookings, that.hotelBookings) && Objects.equals(flightBookings, that.flightBookings)
                 && Objects.equals(travel, that.travel);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(reservationCode, adults, children, promotions, paymentMethod,
-                reservationStatus, deposit, dateOfReservation, agent, customer,
-                hotelBookings, flightBookings, travel);
+                reservationStatus, deposit, dateOfReservation, agent, customer, travel);
     }
 }

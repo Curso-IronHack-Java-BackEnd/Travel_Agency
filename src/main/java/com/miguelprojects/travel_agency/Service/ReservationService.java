@@ -2,13 +2,11 @@ package com.miguelprojects.travel_agency.Service;
 
 import com.miguelprojects.travel_agency.DTOs.ReservationCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.ReservationUpdateDTO;
-import com.miguelprojects.travel_agency.Models.Agent;
-import com.miguelprojects.travel_agency.Models.Customer;
-import com.miguelprojects.travel_agency.Models.Flight;
-import com.miguelprojects.travel_agency.Models.Reservation;
+import com.miguelprojects.travel_agency.Models.*;
 import com.miguelprojects.travel_agency.Repository.AgentRepository;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
 import com.miguelprojects.travel_agency.Repository.ReservationRepository;
+import com.miguelprojects.travel_agency.Repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,9 @@ public class ReservationService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private TravelRepository travelRepository;
+
 
     // Obtener todos los Reservations (getAll)
     public List<Reservation> getAllReservation() {
@@ -48,6 +49,23 @@ public class ReservationService {
     public void deleteReservationById(String reservationCode) {
         Reservation reservation = reservationRepository.findById(reservationCode).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation with Code: "+  reservationCode + " not found"));
+        Travel travel = travelRepository.findById(reservation.getTravel().getTravelId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Reservation doesn´t have any assigned travel"));
+
+        for (HotelBooking hotelBooking : travel.getHotelBookings()) {
+                hotelBooking.setTravel(null);
+        }
+        for (FlightBooking flightBooking : travel.getFlightBookings()) {
+            flightBooking.setTravel(null);
+        }
+        travel.getHotelBookings().clear();
+        travel.getFlightBookings().clear();
+        travel.setReservation(null);
+
+        reservation.setAgent(null);
+        reservation.setCustomer(null);
+//        reservation.setTravel(null);
+        reservationRepository.save(reservation);
 
         reservationRepository.delete(reservation);
     }

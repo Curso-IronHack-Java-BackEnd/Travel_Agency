@@ -127,13 +127,10 @@ create table hotel_bookings
     duration                int                     not null,
     hotel_booking_price     decimal(8,2)            not null,
     hotel_id                bigint                  null,
-    reservation_code        varchar(255)            null,
     travel_id               bigint                  null,
      constraint hotelToHotelBooking
         foreign key (hotel_id) references hotels (hotel_id),
      constraint reservationToHotelBooking
-        foreign key (reservation_code) references reservations (reservation_code),
-     constraint travelToHotelBooking
         foreign key (travel_id) references travels (travel_id),
     check (`duration` >= 1)
 );
@@ -143,11 +140,8 @@ create table flight_bookings
     flight_booking_id       bigint auto_increment
         primary key,
     flight_booking_price    decimal(8,2)            not null,
-    reservation_code        varchar(255)            null,
     travel_id               bigint                  null,
     flight_id               bigint                  null,
-     constraint reservationToFlightBooking
-        foreign key (reservation_code) references reservations (reservation_code),
      constraint travelToFlightBooking
         foreign key (travel_id) references travels (travel_id),
      constraint flightToFlightBooking
@@ -307,35 +301,35 @@ INSERT INTO travels (destination, duration, final_price, customer_id, reservatio
     ('Europe', 20, 12290, 3, 'MN435',null),
     ('America', 22, 42611, 4, 'HG456',null);
 
-INSERT INTO hotel_bookings (duration, hotel_booking_price, hotel_id, reservation_code, travel_id) VALUES
-    (6, 270, 2, 'AD456', 1),
-    (10, 670, 6, 'VD756', 3),
-    (14, 520, 3, 'GH990', 4),
-    (6, 160, 4, 'DF549', 5),
-    (10, 80, 1, 'KO672', 6),
-    (8, 9592, 7, 'KO788', 7),
-    (4, 1400, 6, 'MN435', 8),
-    (3, 420, 1, 'MN435', 8),
-    (6, 3090, 3, 'MN435', 8),
-    (7, 2520, 4, 'MN435', 8),
-    (10, 1050, 2, 'HG456', 9),
-    (12, 15120, 8, 'HG456', 9);
+INSERT INTO hotel_bookings (duration, hotel_booking_price, hotel_id, travel_id) VALUES
+    (6, 270, 2, 1),
+    (10, 670, 6, 3),
+    (14, 520, 3, 4),
+    (6, 160, 4, 5),
+    (10, 80, 1, 6),
+    (8, 9592, 7, 7),
+    (4, 1400, 6, 8),
+    (3, 420, 1, 8),
+    (6, 3090, 3, 8),
+    (7, 2520, 4, 8),
+    (10, 1050, 2, 9),
+    (12, 15120, 8, 9);
 
-INSERT INTO flight_bookings (flight_booking_price, reservation_code, travel_id, flight_id) VALUES
-    (4020, 'AD456', 1, 3),
-    (316, 'RT909', 2, 2),
-    (1960, 'VD756', 3, 6),
-    (1170, 'GH990', 4, 4),
-    (306, 'DF549', 5, 5),
-    (3950, 'KO788', 7, 9),
-    (1160, 'MN435', 8, 7),
-    (265, 'MN435', 8, 10),
-    (975, 'MN435', 8, 4),
-    (385, 'MN435', 8, 11),
-    (1215, 'MN435', 8, 12),
-    (4020, 'HG456', 9, 3),
-    (7293, 'HG456', 9, 13),
-    (14628, 'HG456', 9, 8);
+INSERT INTO flight_bookings (flight_booking_price, travel_id, flight_id) VALUES
+    (4020, 1, 3),
+    (316, 2, 2),
+    (1960, 3, 6),
+    (1170, 4, 4),
+    (306, 5, 5),
+    (3950, 7, 9),
+    (1160, 8, 7),
+    (265, 8, 10),
+    (975, 8, 4),
+    (385, 8, 11),
+    (1215, 8, 12),
+    (4020, 9, 3),
+    (7293, 9, 13),
+    (14628, 9, 8);
 
 INSERT INTO amenities (name, description) VALUES
     ('Parking', 'Simplify the stress of finding parking for guests arriving by car'),

@@ -42,16 +42,24 @@ public class AgentService {
         Agent agent = agentRepository.findById(agentId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id: "+ agentId + " not found"));
 
+        for (Reservation reservation : agent.getReservations()) {
+            reservation.setAgent(null);
+            reservationRepository.save(reservation);
+        }
+
         for (Manager manager : managerRepository.findAll()) {
             if (agent.getManager().equals(manager)) {
                 agent.setManager(null);
                 agent.setFirstName("Borrado");
                 System.out.println("Este agent tiene un manager asignado, antes seteamos el manager a null");
-                agentRepository.deleteById(agentId);
+
                 break;
-            } else {agentRepository.deleteById(agentId); }
+            }
         }
 
+        agent.getReservations().clear();
+        agentRepository.save(agent);
+        agentRepository.delete(agent);
     }
 
 

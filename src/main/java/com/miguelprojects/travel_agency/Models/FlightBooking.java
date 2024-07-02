@@ -32,15 +32,15 @@ public class FlightBooking {
     @NotNull(message = "Booking price for flight is mandatory")
     private BigDecimal flightBookingPrice;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "reservation_code")
-    private Reservation reservation;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "reservation_code")
+//    private Reservation reservation;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "travel_id")
     private Travel travel;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name="flight_id")
     private Flight flight;
 
@@ -48,8 +48,18 @@ public class FlightBooking {
 //    @JoinColumn(name = "bill_id")
 //    private Bill bill;
 
+//    public BigDecimal totalPriceFlightBooking(FlightBooking flightBooking){
+//        Reservation reservation = flightBooking.getReservation();
+//        Flight flight = flightBooking.getFlight();
+//        Integer children = reservation.getChildren();
+//        Integer adults = reservation.getAdults();
+//        BigDecimal price = flight.getPrice();
+//        return price.multiply(BigDecimal.valueOf(children)).add(BigDecimal.valueOf(adults));
+//    }
+
     public BigDecimal totalPriceFlightBooking(FlightBooking flightBooking){
-        Reservation reservation = flightBooking.getReservation();
+        Travel travel = flightBooking.getTravel();
+        Reservation reservation = travel.getReservation();
         Flight flight = flightBooking.getFlight();
         Integer children = reservation.getChildren();
         Integer adults = reservation.getAdults();

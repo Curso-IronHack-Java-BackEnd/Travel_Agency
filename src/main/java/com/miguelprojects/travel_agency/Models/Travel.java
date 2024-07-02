@@ -36,7 +36,7 @@ public class Travel {
     private BigDecimal finalPrice;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

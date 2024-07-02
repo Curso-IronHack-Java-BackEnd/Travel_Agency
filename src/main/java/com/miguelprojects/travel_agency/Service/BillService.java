@@ -90,6 +90,17 @@ public class BillService {
         return billRepository.save(newBill);
     }
 
+    // Eliminar una Bill concreta (deleteById)
+    public void deleteBillById(Long billId) {
+        Bill bill = billRepository.findById(billId).orElseThrow
+                (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bill with id: "+ billId + " not found"));
+
+        bill.setTravel(null);
+        billRepository.save(bill);
+        billRepository.delete(bill);
+    }
+
+
 
 //
 //    public Bill getBillByTravelId(Long travelId) {
@@ -129,7 +140,8 @@ public class BillService {
     }
 
     public BigDecimal totalPriceFlightBooking(FlightBooking flightBooking){
-        Reservation reservation = flightBooking.getReservation();
+        Travel travel = flightBooking.getTravel();
+        Reservation reservation = travel.getReservation();
         Flight flight = flightBooking.getFlight();
         Integer children = reservation.getChildren();
         Integer adults = reservation.getAdults();
@@ -138,8 +150,10 @@ public class BillService {
         BigDecimal priceAdults = price.multiply(BigDecimal.valueOf(adults));
         return priceChildren.add(priceAdults);
     }
+
     public BigDecimal totalPriceHotelBooking(HotelBooking hotelBooking){
-        Reservation reservation = hotelBooking.getReservation();
+        Travel travel = hotelBooking.getTravel();
+        Reservation reservation = travel.getReservation();
         Hotel hotel = hotelBooking.getHotel();
         BigDecimal roomExtrasTotalPrice = BigDecimal.ZERO;
         BigDecimal hotelExtrasTotalPrice = BigDecimal.ZERO;

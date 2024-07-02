@@ -36,7 +36,7 @@ public class Bill {
 //    private List<FlightBooking> flightBookings;
 
 
-    @OneToOne(mappedBy="bill", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy="bill")
     private Travel travel;
 
     // Funciones que calculan el precio de todos los bookings de hotels y flights

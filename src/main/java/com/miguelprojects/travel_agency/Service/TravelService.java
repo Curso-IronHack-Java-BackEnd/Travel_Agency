@@ -47,6 +47,12 @@ public class TravelService {
         Travel travel = travelRepository.findById(travelId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id: "+  travelId + " not found"));
 
+        travel.setCustomer(null);
+        travel.setBill(null);
+        travel.getHotelBookings().clear();
+        travel.getFlightBookings().clear();
+        travelRepository.save(travel);
+
         travelRepository.delete(travel);
     }
 

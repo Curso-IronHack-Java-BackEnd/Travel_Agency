@@ -43,6 +43,15 @@ public class ManagerService {
         Manager manager = managerRepository.findById(managerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manager with id: "+  managerId + " not found"));
 
+        for (Agent agent : manager.getAgents()) {
+            agent.setManager(null);
+            agentRepository.save(agent);
+        }
+        managerRepository.delete(manager);
+
+
+
+
         managerRepository.delete(manager);
     }
 

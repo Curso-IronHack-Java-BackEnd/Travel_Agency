@@ -5,9 +5,13 @@ import com.miguelprojects.travel_agency.DTOs.CustomerCreateDTO;
 import com.miguelprojects.travel_agency.Models.Agent;
 import com.miguelprojects.travel_agency.Models.Customer;
 import com.miguelprojects.travel_agency.Models.Reservation;
+import com.miguelprojects.travel_agency.Models.HotelBooking;
+import com.miguelprojects.travel_agency.Models.FlightBooking;
 import com.miguelprojects.travel_agency.Models.Travel;
 import com.miguelprojects.travel_agency.Repository.AgentRepository;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
+import com.miguelprojects.travel_agency.Repository.ReservationRepository;
+import com.miguelprojects.travel_agency.Repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,10 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private TravelRepository travelRepository;
 
 
     // Obtener todos los Customers (getAll)
@@ -44,6 +52,30 @@ public class CustomerService {
         Customer customer = customerRepository.findById(customerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id: "+  customerId + " not found"));
 
+        // Primero chequear que tiene reservas (no es null) lo mismo para travels, reservation y travel hotel/flight bookings etc para no intentar "get" algo que es null
+        for (Reservation reservation : customer.getReservations()) {
+            reservation.setCustomer(null);
+            reservationRepository.save(reservation);
+        }
+
+        for (Travel travel : customer.getTravels()) {
+            for (HotelBooking hotelBooking : travel.getHotelBookings()) {
+                hotelBooking.setTravel(null);
+            }
+            for (FlightBooking flightBooking : travel.getFlightBookings()) {
+                flightBooking.setTravel(null);
+            }
+            travel.getHotelBookings().clear();
+            travel.getFlightBookings().clear();
+            travel.setCustomer(null);
+            travelRepository.save(travel);
+        }
+
+        customer.getReservations().clear();
+        customer.getTravels().clear();
+        customerRepository.save(customer);
+
+        // Delete customer
         customerRepository.delete(customer);
     }
 
