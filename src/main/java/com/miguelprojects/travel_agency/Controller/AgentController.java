@@ -62,7 +62,7 @@ public class AgentController {
     //Modificar agent concreto(updateById) (SOLO A SI MISMO)
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAgent(@PathVariable(name="id") Long agentId, @Valid @RequestBody AgentUpdateDTO agentDTO) {
+    public void updateAgent(@PathVariable(name="id") Long agentId, @RequestBody AgentUpdateDTO agentDTO) {
         agentService.updateAgent(agentId, agentDTO);
     }
 
@@ -171,12 +171,12 @@ public class AgentController {
         travelService.updateTravel(travelId, travelDTO);
     }
 
-    //Eliminar travel (deleteTravelById)
-    @DeleteMapping("/travels/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteTravel(@PathVariable(name = "id") Long travelId){
-        travelService.deleteTravelById(travelId);
-    }
+//    //Eliminar travel (deleteTravelById) (EL TRAVEL NO SE DEBE BORRAR, SE BORRA AL ELIMINAR LA RESERVATION)
+//    @DeleteMapping("/travels/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void deleteTravel(@PathVariable(name = "id") Long travelId){
+//        travelService.deleteTravelById(travelId);
+//    }
 
     //Obtener todos los hotels(getAllHotels)
     @GetMapping("/hotels")
@@ -207,26 +207,26 @@ public class AgentController {
         return travelService.getHotelsByTravelId(travelId);
     }
 
-    //Crear una nueva Bill (create/post)
-    @PostMapping("/travels/{id}/bill")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Bill createBill(@PathVariable(name = "id") Long travelId) {
-        return billService.createBill(travelId);
-    }
+//    //Crear una nueva Bill (create/post) (ESTA BILL NO SUMA LOS EXTRAS NI APLICA DESCUENTOS)
+//    @PostMapping("/travels/{id}/bill")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public Bill createBill(@PathVariable(name = "id") Long travelId) {
+//        return billService.createBill(travelId);
+//    }
 
-    //Crear una nueva Bill con extras(create/post)
+    //Crear una nueva Bill con extras(create/post) (BILL CON EXTRAS Y DESCUENTO)
     @PostMapping("/travels/{id}/fullBill")
     @ResponseStatus(HttpStatus.CREATED)
     public Bill createBillWithExtras(@PathVariable(name = "id") Long travelId) {
         return billService.createBill2(travelId);
     }
 
-//    //Obtener Bill por travelId (GetBillByTravelId)
-//    @GetMapping("/travels/{id}/bills")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Bill getBillByTravelId(@PathVariable(name = "id") Long travelId) {
-//        return billService.getBillByTravelId(travelId);
-//    }
+    //Obtener Bill por travelId (GetBillByTravelId)
+    @GetMapping("/travels/{id}/bills")
+    @ResponseStatus(HttpStatus.OK)
+    public Bill getBillByTravelId(@PathVariable(name = "id") Long travelId) {
+        return billService.getBillByTravelId(travelId);
+    }
 
 
 //    //Obtener todos los amenities de un HotelBooking(getAllAmenities)

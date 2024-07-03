@@ -27,6 +27,8 @@ public class TravelService {
 
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private HotelBookingRepository hotelBookingRepository;
 
 
     // Obtener todos los Travels (getAll)
@@ -42,13 +44,21 @@ public class TravelService {
         return travel;
     }
 
-    // Eliminar un Travel concreto (deleteById)
+    // Eliminar un Travel concreto (deleteById) (EL TRAVEL NO SE DEBE BORRAR, SE BORRA AL ELIMINAR LA RESERVATION)
     public void deleteTravelById(Long travelId) {
         Travel travel = travelRepository.findById(travelId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id: "+  travelId + " not found"));
 
         travel.setCustomer(null);
         travel.setBill(null);
+        travel.setReservation(null);
+
+        for (HotelBooking hotelbooking : travel.getHotelBookings()) {
+            hotelbooking.getAmenities().clear();
+            hotelbooking.getHotelExtras().clear();
+            hotelbooking.getRoomExtras().clear();
+            hotelBookingRepository.save(hotelbooking);
+        }
         travel.getHotelBookings().clear();
         travel.getFlightBookings().clear();
         travelRepository.save(travel);

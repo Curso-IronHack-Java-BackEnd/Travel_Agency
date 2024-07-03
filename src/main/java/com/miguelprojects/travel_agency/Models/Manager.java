@@ -28,7 +28,7 @@ public class Manager extends User{
     private Integer yearsOfExperience;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
     private List<Agent> agents = new ArrayList<>();
 
     public Manager() {    }

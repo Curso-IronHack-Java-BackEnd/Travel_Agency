@@ -70,7 +70,7 @@ public class Reservation {
 //    private List<FlightBooking> flightBookings = new ArrayList<>();
 
     @JsonIgnore
-    @OneToOne(mappedBy="reservation", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy="reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Travel travel;
 
     public Reservation() {    }

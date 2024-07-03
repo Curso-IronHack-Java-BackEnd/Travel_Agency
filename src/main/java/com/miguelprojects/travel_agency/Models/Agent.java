@@ -29,7 +29,7 @@ public class Agent extends User{
     private BigDecimal commissionRate = BigDecimal.ONE;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "agent")
     private List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne()

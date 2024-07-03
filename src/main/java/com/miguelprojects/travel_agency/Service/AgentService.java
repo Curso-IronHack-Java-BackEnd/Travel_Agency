@@ -4,6 +4,7 @@ import com.miguelprojects.travel_agency.DTOs.*;
 import com.miguelprojects.travel_agency.Models.*;
 import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +24,8 @@ public class AgentService {
     private AgentRepository agentRepository;
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private HttpMessageConverters messageConverters;
 
     // Obtener todos los Agents (getAll)
     public List<Agent> getAllAgent() {
@@ -48,9 +51,8 @@ public class AgentService {
         }
 
         for (Manager manager : managerRepository.findAll()) {
-            if (agent.getManager().equals(manager)) {
+            if (agent.getManager() != null && agent.getManager().equals(manager)) {
                 agent.setManager(null);
-                agent.setFirstName("Borrado");
                 System.out.println("Este agent tiene un manager asignado, antes seteamos el manager a null");
 
                 break;

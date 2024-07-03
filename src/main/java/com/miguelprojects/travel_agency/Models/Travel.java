@@ -40,7 +40,7 @@ public class Travel {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne()
     @JoinColumn(name="reservation_code")
     private Reservation reservation;
 

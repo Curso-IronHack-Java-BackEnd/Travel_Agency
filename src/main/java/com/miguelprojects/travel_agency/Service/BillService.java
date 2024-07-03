@@ -101,22 +101,22 @@ public class BillService {
     }
 
 
+    public Bill getBillByTravelId(Long travelId) {
+        Travel travel = travelRepository.findById(travelId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id " +
+                        travelId+ " not found"));
 
-//
-//    public Bill getBillByTravelId(Long travelId) {
-//        Travel travel = travelRepository.findById(travelId).
-//                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel with id " +
-//                        travelId+ " not found"));
-//
-//        Bill bill = new Bill();
-//        bill.setTravel(travel);
-//        bill.setFlightBookingPrice(flightBookingsPrice(travel));
-//        bill.setHotelBookingPrice(hotelBookingsPrice(travel));
-//        bill.setTotalBookingPrice(flightBookingsPrice(travel).add(hotelBookingsPrice(travel)));
-//
-//        return bill;
-//
-//    }
+        Bill bill = new Bill();
+
+        if(travel.getBill() == null) {
+            bill = createBill2(travelId);
+        } else {
+            bill = travel.getBill();
+        }
+
+        return bill;
+
+    }
 
     // Funciones que calculan el precio de todos los bookings de hotels y flights
     public BigDecimal hotelBookingsPrice(Travel travel) {

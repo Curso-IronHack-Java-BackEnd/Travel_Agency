@@ -48,11 +48,6 @@ public class ManagerService {
             agentRepository.save(agent);
         }
         managerRepository.delete(manager);
-
-
-
-
-        managerRepository.delete(manager);
     }
 
     // Crear nuevo Manager (create/post)
