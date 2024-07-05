@@ -5,8 +5,11 @@ by Miguel Angel Aparicio
 
 Este proyecto tiene como objetivo desarrollar un sistema integral de gestión para una agencia de viajes utilizando Spring Boot, un potente framework de Java. El sistema está diseñado para manejar las operaciones diarias de la agencia, mejorando la eficiencia y facilitando la gestión de clientes, agentes y gerentes.
 
+## Casos de Uso
+![Casos de uso](https://raw.githubusercontent.com/Curso-IronHack-Java-BackEnd/Travel_Agency/main/Casos%20de%20uso_proyecto%20agencia%20viajes.jpg)
 
-## DIAGRAMA DE CLASES
+
+## Diagrama de Clases
 ![Diagrama de clases](https://raw.githubusercontent.com/Curso-IronHack-Java-BackEnd/Travel_Agency/main/Diagrama%20de%20clases.png?token=GHSAT0AAAAAACQT7AGFPTKBNMHUIZSAAX64ZUH57RQ)
 
 ## Configuración
@@ -121,6 +124,7 @@ Este proyecto tiene como objetivo desarrollar un sistema integral de gestión pa
 ## Enlaces Adicionales
 [Repositorio en GitHub](https://github.com/Curso-IronHack-Java-BackEnd/Travel_Agency.git)
 [Presentacion del proyecto](https://prezi.com/p/edit/yjpi5ur0sq2x/)
+[Gestion del proyecto en Trello](https://trello.com/b/jGEMJ7AC/proyecto-travelagency)
 
 ## Trabajo futuro
 Hay mucho en lo que se puede seguir mejorando la aplicación:
