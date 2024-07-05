@@ -1,6 +1,6 @@
 package com.miguelprojects.travel_agency.DTOs;
 
-import com.miguelprojects.travel_agency.Models.User;
+import com.miguelprojects.travel_agency.Models.Person;
 import lombok.*;
 
 
@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgentUpdateDTO extends User {
+public class AgentUpdateDTO extends Person {
 
     private String specialization;
 

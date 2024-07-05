@@ -39,6 +39,7 @@ public class BillService {
         BigDecimal totalHotelPrice = BigDecimal.ZERO;
 
 
+
         for (FlightBooking flightBooking : flightBookings){
             totalFlightPrice = totalFlightPrice.add(flightBooking.getFlightBookingPrice());
         }
@@ -57,7 +58,7 @@ public class BillService {
         return billRepository.save(newBill);
     }
 
-    public Bill createBill2 (Long travelId){
+    public Bill createFullBill (Long travelId){
         Travel travel = travelRepository.findById(travelId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "travelId not found"));
 
@@ -77,15 +78,13 @@ public class BillService {
 
         Bill newBill = new Bill();
         newBill.setTravel(travel);
+        newBill.setFlightBookingPrice(totalFlightsPrice);
+        newBill.setHotelBookingPrice(totalHotelsPrice);
 
         if (reservation.getPromotions() != Promotions.NONE ){
-            newBill.setFlightBookingPrice(totalFlightsPrice.multiply(BigDecimal.valueOf(0.8)));
-            newBill.setHotelBookingPrice(totalHotelsPrice.multiply(BigDecimal.valueOf(0.8)));
-        } else {
-            newBill.setFlightBookingPrice(totalFlightsPrice);
-            newBill.setHotelBookingPrice(totalHotelsPrice);
+            newBill.setDiscount(totalFlightsPrice.multiply(BigDecimal.valueOf(0.2)).add(totalHotelsPrice.multiply(BigDecimal.valueOf(0.2))));
         }
-        newBill.setTotalBookingPrice(newBill.getFlightBookingPrice().add(newBill.getHotelBookingPrice()));
+        newBill.setTotalBookingPrice((newBill.getFlightBookingPrice().add(newBill.getHotelBookingPrice()).subtract(newBill.getDiscount())));
 
         return billRepository.save(newBill);
     }
@@ -109,7 +108,7 @@ public class BillService {
         Bill bill = new Bill();
 
         if(travel.getBill() == null) {
-            bill = createBill2(travelId);
+            bill = createFullBill(travelId);
         } else {
             bill = travel.getBill();
         }

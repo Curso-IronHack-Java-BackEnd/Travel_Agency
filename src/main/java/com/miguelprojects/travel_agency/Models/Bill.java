@@ -24,6 +24,8 @@ public class Bill {
 
     private BigDecimal hotelBookingPrice;
 
+    private BigDecimal discount = BigDecimal.ZERO;
+
     private BigDecimal totalBookingPrice;
 
 

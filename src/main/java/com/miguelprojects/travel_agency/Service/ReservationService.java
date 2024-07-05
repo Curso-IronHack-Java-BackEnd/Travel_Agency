@@ -3,10 +3,7 @@ package com.miguelprojects.travel_agency.Service;
 import com.miguelprojects.travel_agency.DTOs.ReservationCreateDTO;
 import com.miguelprojects.travel_agency.DTOs.ReservationUpdateDTO;
 import com.miguelprojects.travel_agency.Models.*;
-import com.miguelprojects.travel_agency.Repository.AgentRepository;
-import com.miguelprojects.travel_agency.Repository.CustomerRepository;
-import com.miguelprojects.travel_agency.Repository.ReservationRepository;
-import com.miguelprojects.travel_agency.Repository.TravelRepository;
+import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +27,9 @@ public class ReservationService {
 
     @Autowired
     private TravelRepository travelRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     // Obtener todos los Reservations (getAll)
@@ -71,12 +71,10 @@ public class ReservationService {
     }
 
     // Crear nueva Reservation (create/post)
-    public Reservation createReservation (ReservationCreateDTO reservationDTO){
-
-        Agent agent = agentRepository.findById(reservationDTO.getAgentId()).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Reservation doesn´t have any assigned agent"));
-
-        Customer customer = customerRepository.findById(reservationDTO.getAgentId()).
+    public Reservation createReservation (String username, ReservationCreateDTO reservationDTO){
+        User user = userRepository.findByUsername(username);
+        Agent agent = user.getAgent();
+        Customer customer = customerRepository.findById(reservationDTO.getCustomerId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Reservation doesn´t have any assigned customer"));
 
         Reservation newReservation = new Reservation();
@@ -131,6 +129,16 @@ public class ReservationService {
         Customer customer = customerRepository.findById(customerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id " +
                         customerId+ " not found"));
+
+        List<Reservation> reservations = customer.getReservations();
+
+        return reservations;
+    }
+
+    // Obtener todas las reservations de un user (getReservationsByUsername)
+    public List <Reservation> getReservationsByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        Customer customer = user.getCustomer();
 
         List<Reservation> reservations = customer.getReservations();
 

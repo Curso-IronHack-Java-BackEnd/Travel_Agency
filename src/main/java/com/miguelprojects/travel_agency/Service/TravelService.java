@@ -29,6 +29,8 @@ public class TravelService {
     private AgentRepository agentRepository;
     @Autowired
     private HotelBookingRepository hotelBookingRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     // Obtener todos los Travels (getAll)
@@ -110,6 +112,16 @@ public class TravelService {
         Customer customer = customerRepository.findById(customerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id " +
                         customerId+ " not found"));
+
+        List<Travel> travels = customer.getTravels();
+
+        return travels;
+    }
+
+    // Obtener todos los travels de un user (getTravelsByUsername)
+    public List <Travel> getTravelsByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        Customer customer = user.getCustomer();
 
         List<Travel> travels = customer.getTravels();
 

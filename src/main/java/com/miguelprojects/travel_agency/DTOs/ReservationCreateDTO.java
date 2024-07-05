@@ -45,7 +45,7 @@ public class ReservationCreateDTO {
     @Past(message = "Reservation must have been made in the past")
     private LocalDateTime dateOfReservation;
 
-    @NotNull
+
     private Long agentId;
 
     @NotNull

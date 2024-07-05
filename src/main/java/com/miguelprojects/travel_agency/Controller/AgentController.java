@@ -7,6 +7,8 @@ import com.miguelprojects.travel_agency.Service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -45,25 +47,55 @@ public class AgentController {
     @Autowired
     private BillService billService;
 
-    //Obtener un agent concreto (getAgentById) (SOLO A SI MISMO)
-    @GetMapping("/{id}")
+    //Obtener un agent concreto (getAgentByUsername) (SOLO A SI MISMO)
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Agent getAgentById(@PathVariable(name="id") Long agentId) {
-        return agentService.getAgentById(agentId);
+    public Agent getAgentByUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+
+        return agentService.getAgentByUsername(username);
     }
 
     //Crear un nuevo agent (create/post) (SOLO A SI MISMO)
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Agent selfCreateAgent(@Valid @RequestBody AgentSelfCreateDTO agentDTO) {
-        return agentService.selfCreateAgent(agentDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+
+        return agentService.selfCreateAgent(username, agentDTO);
     }
 
-    //Modificar agent concreto(updateById) (SOLO A SI MISMO)
-    @PutMapping("/{id}")
+    //Modificar agent concreto(updateByUsername) (SOLO A SI MISMO)
+    @PutMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAgent(@PathVariable(name="id") Long agentId, @RequestBody AgentUpdateDTO agentDTO) {
-        agentService.updateAgent(agentId, agentDTO);
+    public void updateAgent(@RequestBody AgentUpdateDTO agentDTO) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+
+        agentService.updateAgentByUsername(username, agentDTO);
     }
 
     //Obtener todos los customers(getAllCustomers)
@@ -115,11 +147,20 @@ public class AgentController {
         return reservationService.getReservationsByCustomerId(customerId);
     }
 
-    //Crear una nueva reservation (create/post)
+    //Crear una nueva reservation (create/post) (AGENT)
     @PostMapping("/reservations")
     @ResponseStatus(HttpStatus.CREATED)
     public Reservation createReservation(@Valid @RequestBody ReservationCreateDTO reservationDTO) {
-        return reservationService.createReservation(reservationDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+        return reservationService.createReservation(username, reservationDTO);
     }
 
     //Modificar una reservation concreta(updateById)
@@ -218,7 +259,7 @@ public class AgentController {
     @PostMapping("/travels/{id}/fullBill")
     @ResponseStatus(HttpStatus.CREATED)
     public Bill createBillWithExtras(@PathVariable(name = "id") Long travelId) {
-        return billService.createBill2(travelId);
+        return billService.createFullBill(travelId);
     }
 
     //Obtener Bill por travelId (GetBillByTravelId)

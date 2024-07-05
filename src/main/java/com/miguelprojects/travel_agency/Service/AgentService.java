@@ -25,19 +25,28 @@ public class AgentService {
     @Autowired
     private ManagerRepository managerRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private HttpMessageConverters messageConverters;
 
-    // Obtener todos los Agents (getAll)
+    // Obtener todos los Agents (getAll) (MANAGER)
     public List<Agent> getAllAgent() {
         return agentRepository.findAll();
     }
 
-    // Obtener un Agent concreto (getById)
+    // Obtener un Agent concreto (getById) (MANAGER)
     public Agent getAgentById(Long agentId) {
         Agent agent = agentRepository.findById(agentId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id: "+ agentId + " not found"));
 
         return agent;
+    }
+
+    // Obtener su propio agent (getByUsername) (AGENT)
+    public Agent getAgentByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+
+        return user.getAgent();
     }
 
     // Eliminar un Agent concreto (deleteById)
@@ -84,17 +93,23 @@ public class AgentService {
     }
 
     // Crear nuevo Agent (create/post by him/herself)
-    public Agent selfCreateAgent (AgentSelfCreateDTO agentDTO){
+    public Agent selfCreateAgent (String username, AgentSelfCreateDTO agentDTO){
+        User user = userRepository.findByUsername(username);
 
-        Agent newAgent = new Agent();
-        newAgent.setFirstName(agentDTO.getFirstName());
-        newAgent.setLastName(agentDTO.getLastName());
-        newAgent.setPhoneNumber(agentDTO.getPhoneNumber());
-        newAgent.setEmail(agentDTO.getEmail());
-        newAgent.setSpecialization(agentDTO.getSpecialization());
-
-
-        return agentRepository.save(newAgent);
+        if (user.getAgent() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Agent " + username +" has already been created");
+        } else {
+            Agent newAgent = new Agent();
+            newAgent.setFirstName(agentDTO.getFirstName());
+            newAgent.setLastName(agentDTO.getLastName());
+            newAgent.setPhoneNumber(agentDTO.getPhoneNumber());
+            newAgent.setEmail(agentDTO.getEmail());
+            newAgent.setSpecialization(agentDTO.getSpecialization());
+            agentRepository.save(newAgent);
+            user.setAgent(newAgent);
+            userRepository.save(user);
+            return newAgent;
+        }
     }
 
     // Modificar un Agent concreto (update/ById)
@@ -102,6 +117,35 @@ public class AgentService {
 
         Agent updatedAgent = agentRepository.findById(agentId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + agentId +" not found"));
+
+        if (agentDTO.getFirstName() != null){
+            updatedAgent.setFirstName(agentDTO.getFirstName());
+        }
+        if (agentDTO.getLastName() != null){
+            updatedAgent.setLastName(agentDTO.getLastName());
+        }
+        if (agentDTO.getPhoneNumber() != null){
+            updatedAgent.setPhoneNumber(agentDTO.getPhoneNumber());
+        }
+        if (agentDTO.getEmail() != null){
+            updatedAgent.setEmail(agentDTO.getEmail());
+        }
+        if (agentDTO.getSpecialization() != null){
+            updatedAgent.setSpecialization(agentDTO.getSpecialization());
+        }
+
+        agentRepository.save(updatedAgent);
+
+        return updatedAgent;
+    }
+
+    // Modificar su propio Agent (update/ByUsername)
+    public Agent updateAgentByUsername (String username, AgentUpdateDTO agentDTO){
+        User user = userRepository.findByUsername(username);
+        Agent updatedAgent = user.getAgent();
+        if (user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + username +" not found");
+        }
 
         if (agentDTO.getFirstName() != null){
             updatedAgent.setFirstName(agentDTO.getFirstName());

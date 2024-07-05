@@ -2,16 +2,8 @@ package com.miguelprojects.travel_agency.Service;
 
 import com.miguelprojects.travel_agency.DTOs.CustomerUpdateDTO;
 import com.miguelprojects.travel_agency.DTOs.CustomerCreateDTO;
-import com.miguelprojects.travel_agency.Models.Agent;
-import com.miguelprojects.travel_agency.Models.Customer;
-import com.miguelprojects.travel_agency.Models.Reservation;
-import com.miguelprojects.travel_agency.Models.HotelBooking;
-import com.miguelprojects.travel_agency.Models.FlightBooking;
-import com.miguelprojects.travel_agency.Models.Travel;
-import com.miguelprojects.travel_agency.Repository.AgentRepository;
-import com.miguelprojects.travel_agency.Repository.CustomerRepository;
-import com.miguelprojects.travel_agency.Repository.ReservationRepository;
-import com.miguelprojects.travel_agency.Repository.TravelRepository;
+import com.miguelprojects.travel_agency.Models.*;
+import com.miguelprojects.travel_agency.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,14 +24,16 @@ public class CustomerService {
     private ReservationRepository reservationRepository;
     @Autowired
     private TravelRepository travelRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
-    // Obtener todos los Customers (getAll)
+    // Obtener todos los Customers (getAll) (AGENT)
     public List<Customer> getAllCustomer() {
         return customerRepository.findAll();
     }
 
-    // Obtener un Customer concreto (getById)
+    // Obtener un Customer concreto (getById) (AGENT)
     public Customer getCustomerById(Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id: "+ customerId + " not found"));
@@ -47,7 +41,14 @@ public class CustomerService {
         return customer;
     }
 
-    // Eliminar un Customer concreto (deleteById)
+    // Obtener su propio customer (getByUsername) (CUSTOMER)
+    public Customer getCustomerByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+
+        return user.getCustomer();
+    }
+
+    // Eliminar un Customer concreto (deleteById) (AGENT)
     public void deleteCustomerById(Long customerId) {
         Customer customer = customerRepository.findById(customerId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id: "+  customerId + " not found"));
@@ -79,21 +80,42 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
 
-    // Crear nuevo Customer (create/post)
+    // Crear nuevo Customer (create/post) (AGENT)
     public Customer createCustomer (CustomerCreateDTO customerDTO){
 
-        Customer newCustomer = new Customer();
-        newCustomer.setFirstName(customerDTO.getFirstName());
-        newCustomer.setLastName(customerDTO.getLastName());
-        newCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
-        newCustomer.setEmail(customerDTO.getEmail());
-        newCustomer.setAddress(customerDTO.getAddress());
-        newCustomer.setDateOfBirth(customerDTO.getDateOfBirth());
+            Customer newCustomer = new Customer();
+            newCustomer.setFirstName(customerDTO.getFirstName());
+            newCustomer.setLastName(customerDTO.getLastName());
+            newCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
+            newCustomer.setEmail(customerDTO.getEmail());
+            newCustomer.setAddress(customerDTO.getAddress());
+            newCustomer.setDateOfBirth(customerDTO.getDateOfBirth());
 
-        return customerRepository.save(newCustomer);
+            return customerRepository.save(newCustomer);
     }
 
-    // Modificar un Customer concreto (update/ById)
+    // Crear su propio Customer (create/post) (CUSTOMER)
+    public Customer createOwnCustomer (String username, CustomerCreateDTO customerDTO){
+        User user = userRepository.findByUsername(username);
+
+        if (user.getCustomer() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Customer " + username +" has already been created");
+        } else {
+            Customer newCustomer = new Customer();
+            newCustomer.setFirstName(customerDTO.getFirstName());
+            newCustomer.setLastName(customerDTO.getLastName());
+            newCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
+            newCustomer.setEmail(customerDTO.getEmail());
+            newCustomer.setAddress(customerDTO.getAddress());
+            newCustomer.setDateOfBirth(customerDTO.getDateOfBirth());
+            customerRepository.save(newCustomer);
+            user.setCustomer(newCustomer);
+            userRepository.save(user);
+            return newCustomer;
+        }
+    }
+
+    // Modificar un Customer concreto (update/ById) (AGENT)
     public Customer updateCustomer (Long customerId, CustomerUpdateDTO customerDTO){
 
         Customer updatedCustomer = customerRepository.findById(customerId).orElseThrow(() ->
@@ -123,7 +145,39 @@ public class CustomerService {
         return updatedCustomer;
     }
 
-    //Obtener todos los customers por Agent (getCustomerByAgentId)
+    // Modificar su propio Customer (update/ByUsername) (CUSTOMER)
+    public Customer updateCustomerByUsername (String username, CustomerUpdateDTO customerDTO){
+        User user = userRepository.findByUsername(username);
+        Customer updatedCustomer = user.getCustomer();
+        if (user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer " + username +" not found");
+        }
+
+        if (customerDTO.getFirstName() != null){
+            updatedCustomer.setFirstName(customerDTO.getFirstName());
+        }
+        if (customerDTO.getLastName() != null){
+            updatedCustomer.setLastName(customerDTO.getLastName());
+        }
+        if (customerDTO.getPhoneNumber() != null){
+            updatedCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
+        }
+        if (customerDTO.getEmail() != null){
+            updatedCustomer.setEmail(customerDTO.getEmail());
+        }
+        if (customerDTO.getAddress() != null){
+            updatedCustomer.setAddress(customerDTO.getAddress());
+        }
+        if (customerDTO.getDateOfBirth() != null){
+            updatedCustomer.setDateOfBirth(customerDTO.getDateOfBirth());
+        }
+
+        customerRepository.save(updatedCustomer);
+
+        return updatedCustomer;
+    }
+
+    //Obtener todos los customers por Agent (getCustomerByAgentId) (MANAGER)
     public List<Customer> getCustomersByAgentId(Long agentId) {
         Agent agent = agentRepository.findById(agentId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent with id " +

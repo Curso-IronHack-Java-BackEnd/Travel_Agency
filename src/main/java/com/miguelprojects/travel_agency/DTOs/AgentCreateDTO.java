@@ -1,6 +1,6 @@
 package com.miguelprojects.travel_agency.DTOs;
 
-import com.miguelprojects.travel_agency.Models.User;
+import com.miguelprojects.travel_agency.Models.Person;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgentCreateDTO extends User {
+public class AgentCreateDTO extends Person {
 
     private String specialization;
 

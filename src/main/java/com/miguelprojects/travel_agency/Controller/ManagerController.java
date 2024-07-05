@@ -7,6 +7,8 @@ import com.miguelprojects.travel_agency.Service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public class ManagerController {
     private TravelService travelService;
 
     //Obtener todos los managers (getAllManagers)
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<Manager> getAllManager() {
         return managerService.getAllManager();
@@ -56,25 +58,69 @@ public class ManagerController {
         return managerService.getManagerById(managerId);
     }
 
+    //Obtener su propio perfil de manager (getManagerByUsername)
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public Manager getManagerByUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+        return managerService.getManagerByUsername(username);
+    }
+
     //Crear un nuevo manager (create/post) (SOLO A SI MISMO)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Manager createManager(@RequestBody ManagerCreateDTO managerDTO) {
-        return managerService.createManager(managerDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+        return managerService.createManager(username, managerDTO);
     }
 
     //Modificar manager concreto(updateById) (SOLO A SI MISMO)
-    @PutMapping("/{id}")
+    @PutMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateManager(@PathVariable(name="id") Long managerId, @RequestBody ManagerUpdateDTO managerDTO) {
-        managerService.updateManager(managerId, managerDTO);
+    public void updateManager(@RequestBody ManagerUpdateDTO managerDTO) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+        managerService.updateManager(username, managerDTO);
     }
 
     //Eliminar manager (deleteManagerById) (SOLO A SI MISMO)
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     @ResponseStatus(HttpStatus.OK)
-    public void deleteManager(@PathVariable(name = "id") Long managerId){
-        managerService.deleteManagerById(managerId);
+    public void deleteManager(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println("Logged User: " + username);
+
+        managerService.deleteManagerByUsername(username);
     }
 
 
