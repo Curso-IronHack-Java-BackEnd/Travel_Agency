@@ -123,7 +123,9 @@ Este proyecto tiene como objetivo desarrollar un sistema integral de gestión pa
 
 ## Enlaces Adicionales
 [Repositorio en GitHub](https://github.com/Curso-IronHack-Java-BackEnd/Travel_Agency.git)
+
 [Presentacion del proyecto](https://prezi.com/p/edit/yjpi5ur0sq2x/)
+
 [Gestion del proyecto en Trello](https://trello.com/b/jGEMJ7AC/proyecto-travelagency)
 
 ## Trabajo futuro
@@ -142,8 +144,11 @@ Hay mucho en lo que se puede seguir mejorando la aplicación:
 ## Recursos
 
 Lecciones del Bootcamp de IronHack
+
 [Oracle Documentation](https://docs.oracle.com/javase/tutorial/index.html)
+
 [Spring Data Documentation](https://docs.spring.io/spring-data/jpa/reference/jpa.html)
+
 [Java W3Schools](https://www.w3schools.com/java/default.asp)
 
 ## Miembros del equipo

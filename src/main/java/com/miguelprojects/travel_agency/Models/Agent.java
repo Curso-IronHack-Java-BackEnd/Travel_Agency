@@ -42,6 +42,14 @@ public class Agent extends Person {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
+    public Agent(String firstName, String lastName, String phoneNumber, String email, Long agentId, String specialization, BigDecimal commissionRate, List<Reservation> reservations, Manager manager) {
+        super(firstName, lastName, phoneNumber, email);
+        this.agentId = agentId;
+        this.specialization = specialization;
+        this.commissionRate = commissionRate;
+        this.reservations = reservations;
+        this.manager = manager;
+    }
 //    @JsonIgnore
 //    @OneToOne ()
 //    private User user;

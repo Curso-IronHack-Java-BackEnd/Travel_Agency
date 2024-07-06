@@ -28,10 +28,12 @@ public class AgentRepositoryTest {
     @BeforeEach
     void setUp() {
 
-        Agent agent = new Agent(null, "Ventas", BigDecimal.valueOf(2.65), null,null);
-        agents.add(agent);
-        agentRepository.saveAll(agents);
+//        Agent agent = new Agent(null, "Ventas", BigDecimal.valueOf(2.65), null,null);
+//        agents.add(agent);
+//        agentRepository.saveAll(agents);
 //        agents = agentRepository.saveAll(List.of(
+//
+//                new Agent("miguel", "lopez", "4334355", "email@email.com", "ventas"),
 //                new Agent(null, "sanchez", BigDecimal.ONE, null, null),
 //                new Agent(1L, "Sales", BigDecimal.ONE, null, null),
 //                new Agent(761527L, "Product", BigDecimal.TEN, null, null),
