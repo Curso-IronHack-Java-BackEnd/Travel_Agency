@@ -148,11 +148,11 @@ public class CustomerService {
     // Modificar su propio Customer (update/ByUsername) (CUSTOMER)
     public Customer updateCustomerByUsername (String username, CustomerUpdateDTO customerDTO){
         User user = userRepository.findByUsername(username);
-        Customer updatedCustomer = user.getCustomer();
+
         if (user == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer " + username +" not found");
         }
-
+        Customer updatedCustomer = user.getCustomer();
         if (customerDTO.getFirstName() != null){
             updatedCustomer.setFirstName(customerDTO.getFirstName());
         }

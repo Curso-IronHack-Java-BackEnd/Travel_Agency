@@ -42,6 +42,13 @@ public class Customer extends Person {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Travel> travels = new ArrayList<>();
 
+    public Customer(String firstName, String lastName, String phoneNumber, String email, String address, LocalDate dateOfBirth, List<Reservation> reservations, List<Travel> travels) {
+        super(firstName, lastName, phoneNumber, email);
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.reservations = reservations;
+        this.travels = travels;
+    }
 //    @JsonIgnore
 //    @OneToOne ()
 //    private User user;

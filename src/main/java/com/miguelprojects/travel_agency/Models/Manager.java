@@ -37,7 +37,14 @@ public class Manager extends Person {
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
     private List<Agent> agents = new ArrayList<>();
 
-//    @JsonIgnore
+    public Manager(String firstName, String lastName, String phoneNumber, String email, String department, Integer yearsOfExperience, List<Agent> agents) {
+        super(firstName, lastName, phoneNumber, email);
+        this.department = department;
+        this.yearsOfExperience = yearsOfExperience;
+        this.agents = agents;
+    }
+
+    //    @JsonIgnore
 //    @OneToOne ()
 //    private User user;
 }

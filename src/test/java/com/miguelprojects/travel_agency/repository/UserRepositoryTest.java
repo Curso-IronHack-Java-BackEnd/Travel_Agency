@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,14 +26,18 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    private List<User> users;
+
     @BeforeEach
     void setUp() {
-        User user1 = new User();
-        user1.setUsername("testUser1");
-        User user2 = new User();
-        user2.setUsername("testUser2");
-        userRepository.save(user1);
-        userRepository.save(user2);
+        users = userRepository.saveAll(List.of(
+                new User(null, "Pedro Lopez", "pedrito", "1234", new ArrayList<>(), null, null, null),
+                new User(null, "Lucia Marin", "lucia", "1234", new ArrayList<>(), null, null, null),
+                new User(null, "Marta Polo", "marta", "1234", new ArrayList<>(), null, null, null),
+                new User(null, "Lucas Patiño", "lucas", "1234", new ArrayList<>(), null, null, null),
+                new User(null, "Sofia Genova", "sofia", "1234", new ArrayList<>(), null, null, null),
+                new User(null, "Antonio Casas", "antonio", "1234", new ArrayList<>(), null, null, null)
+        ));
     }
 
     @AfterEach
@@ -38,19 +45,32 @@ public class UserRepositoryTest {
         userRepository.deleteAll();
     }
 
+    @Test
+    @DisplayName("Test Vacio para inicializar setUp")
+    void contextLoads() {
+    }
+
 
     @Test
     @DisplayName("findByUsername Method---Ok")
     void findByUsername_existingUsername_userReturned() {
-        User found = userRepository.findByUsername("testUser1");
+        User found = userRepository.findByUsername("pedrito");
         assertNotNull(found);
-        assertEquals("testUser1", found.getUsername());
+        assertEquals("pedrito", found.getUsername());
+        assertEquals("Pedro Lopez", found.getName());
+    }
+
+    @Test
+    @DisplayName("findByUsername Method---notFound")
+    void findByUsername_nonExistingUsername_notFound() {
+        User found = userRepository.findByUsername("Maria");
+        assertNull(found);
     }
 
     @Test
     @DisplayName("existsByUsername Method---Ok")
     void existsByUsername_existingUsername_trueReturned() {
-        Boolean exists = userRepository.existsByUsername("testUser1");
+        Boolean exists = userRepository.existsByUsername("lucia");
         assertTrue(exists);
     }
 
