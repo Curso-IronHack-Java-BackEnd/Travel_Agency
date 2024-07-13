@@ -35,7 +35,7 @@ public class Agent extends Person {
     private BigDecimal commissionRate = BigDecimal.ONE;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "agent")
+    @OneToMany(mappedBy = "agent", fetch = FetchType.EAGER)
     private List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne()

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import org.hibernate.annotations.DynamicUpdate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,7 @@ public class Reservation {
     private BigDecimal deposit;
 
     @Column(name = "date_of_reservation")
-    @Past(message = "Reservation must have been made in the past")
-    private LocalDateTime dateOfReservation;
+    private LocalDate dateOfReservation;
 
     @JsonIgnore
     @ManyToOne()
@@ -77,7 +77,7 @@ public class Reservation {
 
     public Reservation(String reservationCode, Integer adults, Integer children, Promotions promotions,
                        PaymentMethod paymentMethod, ReservationStatus reservationStatus, BigDecimal deposit,
-                       LocalDateTime dateOfReservation, Agent agent, Customer customer, Travel travel) {
+                       LocalDate dateOfReservation, Agent agent, Customer customer, Travel travel) {
         this.reservationCode = reservationCode;
         this.adults = adults;
         this.children = children;
@@ -149,11 +149,11 @@ public class Reservation {
         this.deposit = deposit;
     }
 
-    public LocalDateTime getDateOfReservation() {
+    public LocalDate getDateOfReservation() {
         return dateOfReservation;
     }
 
-    public void setDateOfReservation(LocalDateTime dateOfReservation) {
+    public void setDateOfReservation(LocalDate dateOfReservation) {
         this.dateOfReservation = dateOfReservation;
     }
 

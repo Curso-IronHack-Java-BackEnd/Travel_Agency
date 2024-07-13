@@ -188,7 +188,9 @@ public class CustomerService {
         List<Reservation> reservations = agent.getReservations();
         for (Reservation reservation : reservations){
             customers.add(reservation.getCustomer());
+            customerRepository.save(reservation.getCustomer());
         }
+
         return customers;
     }
 

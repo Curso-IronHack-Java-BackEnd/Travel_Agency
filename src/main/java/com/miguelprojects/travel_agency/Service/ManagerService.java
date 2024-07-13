@@ -54,11 +54,13 @@ public class ManagerService {
     public void deleteManagerByUsername(String username) {
         User user = userRepository.findByUsername(username);
         Manager manager = user.getManager();
-
-        for (Agent agent : manager.getAgents()) {
-            agent.setManager(null);
-            agentRepository.save(agent);
+        if (manager.getAgents() != null) {
+            for (Agent agent : manager.getAgents()) {
+                agent.setManager(null);
+                agentRepository.save(agent);
+            }
         }
+        user.setManager(null);
         managerRepository.delete(manager);
     }
 

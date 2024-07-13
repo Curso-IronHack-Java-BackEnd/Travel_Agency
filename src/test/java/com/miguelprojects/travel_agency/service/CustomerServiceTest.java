@@ -12,6 +12,7 @@ import com.miguelprojects.travel_agency.Models.Customer;
 import com.miguelprojects.travel_agency.Models.Reservation;
 import com.miguelprojects.travel_agency.Models.User;
 import com.miguelprojects.travel_agency.Repository.CustomerRepository;
+import com.miguelprojects.travel_agency.Repository.ReservationRepository;
 import com.miguelprojects.travel_agency.Repository.UserRepository;
 import com.miguelprojects.travel_agency.Service.AgentService;
 import com.miguelprojects.travel_agency.Repository.AgentRepository;
@@ -34,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,9 +60,14 @@ class CustomerServiceTest {
     @Autowired
     AgentRepository agentRepository;
 
+    @Autowired
+    private ReservationRepository reservationRepository;
+
     private List<Customer> customers;
     private List<User> users;
     private List<Agent> agents;
+    private List<Reservation> reservations;
+
 
     @BeforeEach
     void setUp() {
@@ -95,6 +102,7 @@ class CustomerServiceTest {
     void tearDown() {
         userRepository.deleteAll();
         customerRepository.deleteAll();
+        agentRepository.deleteAll();
     }
 
     @Test
@@ -115,7 +123,8 @@ class CustomerServiceTest {
     @Test
     @DisplayName("getCustomerById Method---Ok")
     void getCustomerById() {
-        Customer found = customerService.getCustomerById(1L);
+        Customer customer = customerRepository.findAll().getFirst();
+        Customer found = customerService.getCustomerById(customer.getCustomerId());
         assertNotNull(found);
         assertEquals("Angela", found.getFirstName());
     }
@@ -146,9 +155,10 @@ class CustomerServiceTest {
     @Test
     @DisplayName("getCustomerByUsername Method---nullPointerException")
     void getCustomerByUsername_nullPointerException() {
-        assertThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             customerService.getCustomerByUsername("Andrea");
         });
+        assertNotNull(exception.getMessage());
     }
 
     @Test
@@ -225,10 +235,11 @@ class CustomerServiceTest {
     @Test
     @DisplayName("updateCustomer Method---Ok")
     void updateCustomer() {
-        Customer found = customerService.getCustomerById(1L);
+        Customer customer = customerRepository.findAll().getFirst();
+        Customer found = customerService.getCustomerById(customer.getCustomerId());
         CustomerUpdateDTO customerDTO = new CustomerUpdateDTO("Callejon del Gato, 19", LocalDate.parse("1990-02-15"));
 
-        Customer updatedCustomer = customerService.updateCustomer(1L, customerDTO);
+        Customer updatedCustomer = customerService.updateCustomer(customer.getCustomerId(), customerDTO);
         customers.add(updatedCustomer);
 
         assertEquals(customers.getLast().getFirstName(), found.getFirstName() );
@@ -279,20 +290,34 @@ class CustomerServiceTest {
     @Test
     @DisplayName("getCustomersByAgentId Method---Ok")
     void getCustomersByAgentId_ok() {
-//        Optional<Agent> agent = agentRepository.findById(1L);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Reservation reservation1= new Reservation("AD456", 2, 1, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDateTime.parse("2024-06-10", formatter), agents.getFirst(), customers.getFirst(), null);
-        Reservation reservation2= new Reservation("AD456", 2, 1, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDateTime.parse("2024-06-10", formatter), agents.getFirst(), customers.getFirst(), null);
-        Reservation reservation3= new Reservation("AD456", 2, 1, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDateTime.parse("2024-06-10", formatter), agents.getLast(), customers.getLast(), null);
+        Reservation reservation1= new Reservation("AD456", 2, 1, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDate.parse("2024-06-10", formatter), agents.getFirst(), customers.getFirst(), null);
+        Reservation reservation2= new Reservation("AE346", 5, 2, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDate.parse("2024-06-10", formatter), agents.getFirst(), customers.getFirst(), null);
+        Reservation reservation3= new Reservation("GF765", 2, 0, Promotions.EARLY_BOOKING, PaymentMethod.CASH, ReservationStatus.PENDING, BigDecimal.ONE, LocalDate.parse("2024-06-10", formatter), agents.getLast(), customers.getLast(), null);
+        Agent agent1 = agentRepository.findAll().getFirst();
+        Agent agent2 = agentRepository.findAll().getLast();
 
-        List<Customer> foundCustomers = customerService.getCustomersByAgentId(1L);
+        reservations = reservationRepository.saveAll(List.of(reservation1,reservation2,reservation3));
 
+        agent1.setReservations(List.of(reservation1, reservation2));
+        agent2.setReservations(List.of(reservation3));
+
+        agentRepository.save(reservations.getFirst().getAgent());
+        agentRepository.save(reservations.getLast().getAgent());
+
+        List<Customer> foundCustomers = customerService.getCustomersByAgentId(agent1.getAgentId());
+
+        assertNotNull(foundCustomers);
         assertEquals(2, foundCustomers.size());
     }
 
-//
-//    @Test
-//    @DisplayName("getCustomerByAgentId Method---notFound")
-//    void getCustomersByAgentId_wrongId_notFound() {
-//    }
+        @Test
+        @DisplayName("getCustomersByAgentId Method---notFound")
+        void getCustomersByAgentId__wrongAgent__notFound() {
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+                customerService.getCustomersByAgentId(0L);
+            });
+
+            assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        }
 }

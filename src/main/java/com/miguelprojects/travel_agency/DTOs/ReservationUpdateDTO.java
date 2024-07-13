@@ -3,12 +3,11 @@ package com.miguelprojects.travel_agency.DTOs;
 import com.miguelprojects.travel_agency.Enums.PaymentMethod;
 import com.miguelprojects.travel_agency.Enums.Promotions;
 import com.miguelprojects.travel_agency.Enums.ReservationStatus;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Data
@@ -29,7 +28,6 @@ public class ReservationUpdateDTO {
 
     private BigDecimal deposit;
 
-    @Past(message = "Reservation must have been made in the past")
-    private LocalDateTime dateOfReservation;
+    private LocalDate dateOfReservation;
 
 }

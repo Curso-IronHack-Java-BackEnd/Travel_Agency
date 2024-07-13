@@ -19,4 +19,9 @@ public class ManagerCreateDTO extends Person {
     @Min(value = 2, message = "Minimun experience is 2 years")
     private Integer yearsOfExperience;
 
+    public ManagerCreateDTO(String firstName, String lastName, String phoneNumber, String email, String department, Integer yearsOfExperience) {
+        super(firstName, lastName, phoneNumber, email);
+        this.department = department;
+        this.yearsOfExperience = yearsOfExperience;
+    }
 }

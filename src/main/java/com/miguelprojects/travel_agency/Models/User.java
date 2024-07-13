@@ -38,12 +38,11 @@ public class User {
     @JsonIgnore
     private Customer customer;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JsonIgnore
     private Agent agent;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "manager_id")
+    @OneToOne(cascade = CascadeType.MERGE)
     @JsonIgnore
     private Manager manager;
 
