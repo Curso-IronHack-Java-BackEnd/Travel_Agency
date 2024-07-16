@@ -172,7 +172,7 @@ class CustomerServiceTest {
     @DisplayName("deleteCustomerById Method--wrongId--notFound")
     void deleteCustomerById_notFound() {
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-            customerService.getCustomerById(0L);
+            customerService.deleteCustomerById(0L);
         });
         // Verifica el código de estado
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
@@ -180,7 +180,7 @@ class CustomerServiceTest {
 
     @Test
     @DisplayName("createCustomer Method---Ok")
-    void createCustomer() {
+    void createCustomer_Ok() {
         CustomerCreateDTO customer = new CustomerCreateDTO("Jose", "Garcia", "676542335", "josito@hotmail.com", "C/ Blanca, 12", LocalDate.parse("1990-02-15"));
         Customer foundCustomer = customerService.createCustomer(customer);
         customers.add(foundCustomer);
@@ -215,7 +215,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("createCustomer Method---existingCustomer")
+    @DisplayName("createOwnCustomer Method---existingCustomer--Conflict")
     void createOwnCustomer_existingCustomer_Conflict() {
         CustomerCreateDTO customerDTO = new CustomerCreateDTO("Jose", "Garcia", "676542335", "josito@hotmail.com", "C/ Blanca, 12", LocalDate.parse("1990-02-15"));
         Customer customer = customerService.createCustomer(customerDTO);

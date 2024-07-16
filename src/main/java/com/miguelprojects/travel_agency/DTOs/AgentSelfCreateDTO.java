@@ -12,6 +12,8 @@ public class AgentSelfCreateDTO extends Person {
 
     private String specialization;
 
-//    @NotNull
-//    private Long managerId;
+    public AgentSelfCreateDTO(String firstName, String lastName, String phoneNumber, String email, String specialization) {
+        super(firstName, lastName, phoneNumber, email);
+        this.specialization = specialization;
+    }
 }

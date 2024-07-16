@@ -45,10 +45,12 @@ class ManagerServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    private List<Manager> managers;
-    private List<User> users;
     @Autowired
     private CustomerRepository customerRepository;
+
+    private List<Manager> managers;
+    private List<User> users;
+
 
     @BeforeEach
     void setUp() {

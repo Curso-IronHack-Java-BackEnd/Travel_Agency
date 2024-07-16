@@ -24,5 +24,11 @@ public class AgentCreateDTO extends Person {
     @NotNull
     private Long managerId;
 
+    public AgentCreateDTO(String firstName, String lastName, String phoneNumber, String email, String specialization, BigDecimal commissionRate, Long managerId) {
+        super(firstName, lastName, phoneNumber, email);
+        this.specialization = specialization;
+        this.commissionRate = commissionRate;
+        this.managerId = managerId;
+    }
 }
 

@@ -46,7 +46,10 @@ public class AgentService {
     public Agent getAgentByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
-        return user.getAgent();
+        if (user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + username +" not found");
+        } else {return user.getAgent();}
+
     }
 
     // Eliminar un Agent concreto (deleteById)
@@ -142,10 +145,12 @@ public class AgentService {
     // Modificar su propio Agent (update/ByUsername)
     public Agent updateAgentByUsername (String username, AgentUpdateDTO agentDTO){
         User user = userRepository.findByUsername(username);
-        Agent updatedAgent = user.getAgent();
+
         if (user == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + username +" not found");
         }
+
+        Agent updatedAgent = user.getAgent();
 
         if (agentDTO.getFirstName() != null){
             updatedAgent.setFirstName(agentDTO.getFirstName());
@@ -174,9 +179,9 @@ public class AgentService {
         Agent updatedAgent = agentRepository.findById(agentId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Agent " + agentId +" not found"));
 
-        if (agentCommissionPatchDTO.getCommissionRate() != null){
+//        if (agentCommissionPatchDTO.getCommissionRate() != null){
             updatedAgent.setCommissionRate(agentCommissionPatchDTO.getCommissionRate());
-        }
+//        }
         agentRepository.save(updatedAgent);
     }
 
